@@ -23,7 +23,9 @@ App::uses( 'SessionHelper', 'View/Helper' );
 class ExtendedSessionHelper extends SessionHelper {
 
 	/**
+	 *	Returns if there is pending flash messages in session.
 	 *
+	 *	@return boolean true if there is pending messages, false otherwise.
 	 */
 
 	public function hasFlash( ) {
@@ -33,7 +35,9 @@ class ExtendedSessionHelper extends SessionHelper {
 
 
 	/**
+	 *	Returns all pending flash messages from the session.
 	 *
+	 *	@return string messages 
 	 */
 
 	public function flashAll( ) {
@@ -47,7 +51,7 @@ class ExtendedSessionHelper extends SessionHelper {
 
 			$html .= $this->_View->element( $flash['element'], $vars );
 
-			CakeSession::delete( 'Message.' . $type );
+			CakeSession::delete( "Message.$type" );
 		}
 
 		return $html;
