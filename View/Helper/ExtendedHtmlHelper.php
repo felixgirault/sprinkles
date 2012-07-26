@@ -209,8 +209,8 @@ class ExtendedHtmlHelper extends HtmlHelper {
 
 		$html = '';
 
-		if ( $root !== '' ) {
-			$root .= '/';
+		if ( $root !== '' && Sprinkles::endsWith( $root, DS )) {
+			$root .= DS;
 		}
 
 		foreach ( $urls as $folder => $name ) {
