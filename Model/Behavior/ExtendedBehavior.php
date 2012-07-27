@@ -5,6 +5,7 @@
  *
  *	@package Sprinkles.Model.Behavior
  *	@author Félix Girault <felix.girault@gmail.com>
+ *	@license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 class ExtendedBehavior extends ModelBehavior {
@@ -13,8 +14,8 @@ class ExtendedBehavior extends ModelBehavior {
 	 *	Returns an array of model's schema fields and their default value, in
 	 *	the form `array( 'field' => 'value' )`.
 	 *
-	 *	@param Model $Model model using this behavior
-	 *	@return array the array of fields
+	 *	@param Model $Model Model using this behavior.
+	 *	@return array The array of fields.
 	 */
 
 	public function defaults( Model $Model ) {

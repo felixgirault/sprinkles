@@ -6,7 +6,7 @@ App::uses( 'SessionHelper', 'View/Helper' );
 
 /**
  *	Extends the capabilities of the original SessionHelper.
- *	Typically meant to be used instead of it, using an alias in your controller :
+ *	Typically meant to be used instead of it, using an alias in your controller:
  *
  *	```
  *		public $helpers = array(
@@ -18,6 +18,7 @@ App::uses( 'SessionHelper', 'View/Helper' );
  *
  *	@package Sprinkles.View.Helper
  *	@author Félix Girault <felix.girault@gmail.com>
+ *	@license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 class ExtendedSessionHelper extends SessionHelper {
@@ -25,7 +26,7 @@ class ExtendedSessionHelper extends SessionHelper {
 	/**
 	 *	Returns if there is pending flash messages in session.
 	 *
-	 *	@return boolean true if there is pending messages, false otherwise.
+	 *	@return boolean True if there is pending messages, false otherwise.
 	 */
 
 	public function hasFlash( ) {
@@ -37,7 +38,7 @@ class ExtendedSessionHelper extends SessionHelper {
 	/**
 	 *	Returns all pending flash messages from the session.
 	 *
-	 *	@return string messages 
+	 *	@return string Messages.
 	 */
 
 	public function flashAll( ) {

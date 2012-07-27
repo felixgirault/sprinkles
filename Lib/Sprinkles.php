@@ -11,7 +11,7 @@ class Sprinkles {
 	 *
 	 *	@param string $haystack 
 	 *	@param string $haystack 
-	 *	@return boolean true if $haystack ends with $needle, otherwise false.
+	 *	@return boolean True if $haystack ends with $needle, otherwise false.
 	 */
 
 	public static function endsWith( $haystack, $needle ) {

@@ -6,7 +6,7 @@ App::uses( 'AuthComponent', 'Controller/Component' );
 
 /**
  *	Extends the capabilities of the original AuthComponent.
- *	Typically meant to be used instead of it, using an alias in your controller :
+ *	Typically meant to be used instead of it, using an alias in your controller:
  *
  *	```
  *		public $components = array(
@@ -18,12 +18,15 @@ App::uses( 'AuthComponent', 'Controller/Component' );
  *	
  *	@package Sprinkles.Controller.Component
  *	@author Félix Girault <felix.girault@gmail.com>
+ *	@license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 class ExtendedAuthComponent extends AuthComponent {
 
 	/**
 	 *	The database field that stores the user role.
+	 *
+	 *	@var string
 	 */
 
 	public $roleField = 'role';
@@ -32,6 +35,8 @@ class ExtendedAuthComponent extends AuthComponent {
 
 	/**
 	 *	A list of actions and corresponding user roles required to access them.
+	 *
+	 *	@var array
 	 */
 
 	protected $_roleBasedAllowedActions = array( );
@@ -39,8 +44,10 @@ class ExtendedAuthComponent extends AuthComponent {
 
 
 	/**
-	 *	@param Controller $Controller
-	 *	@return void
+	 *	Handles authorizations based on the logged user role. See 
+	 *	ExtendedAuthComponent::allowFor( ).
+	 *	
+	 *	@param Controller $Controller Controller using this component.
 	 */
 
 	public function startup( Controller $Controller ) {
@@ -62,9 +69,9 @@ class ExtendedAuthComponent extends AuthComponent {
 	 *	Provides shortcuts to the user( ) and userIs( ) methods.
 	 *	For example, instead of userIs( 'admin' ), you could write userIsAdmin( ).
 	 *
-	 *	@param string $method name of the virtual method
-	 *	@param array $arguments arguments to pass to the actual method (never used here)
-	 *	@return mixed return of the method if it can be parsed, otherwise null
+	 *	@param string $method Name of the virtual method.
+	 *	@param array $arguments Arguments to pass to the actual method (never used here).
+	 *	@return mixed Return of the method if it can be parsed, otherwise null.
 	 */
 
 	public function __call( $method, array $arguments = array( )) {
@@ -93,8 +100,8 @@ class ExtendedAuthComponent extends AuthComponent {
 	 *	This method requires that the user model has a field named 'role',
 	 *	containing the user role.
 	 *
-	 *	@param mixed $role either a string or an array of roles to test the user against
-	 *	@return boolean true if the user has one of the given roles, otherwise false
+	 *	@param mixed $role Either a string or an array of roles to test the user against.
+	 *	@return boolean True if the user has one of the given roles, otherwise false.
 	 */
 
 	public function userIs( $role ) {
@@ -124,9 +131,8 @@ class ExtendedAuthComponent extends AuthComponent {
 	 *		$this->Auth->allowFor( array( 'delete' => array( 'writer', 'admin' )));
 	 *	```
 	 *
-	 *	@param array $actions a list of actions and corresponding user roles
+	 *	@param array $actions A list of actions and corresponding user roles
 	 *		required to access them.
-	 *	@return void
 	 */
 
 	public function allowFor( array $actions = array( )) {

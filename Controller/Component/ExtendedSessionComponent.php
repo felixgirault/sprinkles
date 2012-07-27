@@ -6,7 +6,7 @@ App::uses( 'SessionComponent', 'Controller/Component' );
 
 /**
  *	Extends the capabilities of the original SessionComponent.
- *	Typically meant to be used instead of it, using an alias in your controller :
+ *	Typically meant to be used instead of it, using an alias in your controller:
  *
  *	```
  *		public $components = array(
@@ -18,12 +18,15 @@ App::uses( 'SessionComponent', 'Controller/Component' );
  *
  *	@package Sprinkles.Controller.Component
  *	@author Félix Girault <felix.girault@gmail.com>
+ *	@license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 class ExtendedSessionComponent extends SessionComponent {
 
 	/**
 	 *	The Html classes that will be used for flash messages markup.
+	 *	
+	 *	@var array
 	 */
 
 	public $classes = array(
@@ -35,6 +38,8 @@ class ExtendedSessionComponent extends SessionComponent {
 
 	/**
 	 *	A reference to the controller that is using the component.
+	 *
+	 *	@var Controller
 	 */
 
 	protected $_Controller = null;
@@ -44,12 +49,10 @@ class ExtendedSessionComponent extends SessionComponent {
 	/**
 	 *	Stores a reference to the controller that is using the component.
 	 *
-	 *	@see Component::initialize( ).
+	 *	@param Controller $Controller Controller using this component.
 	 */
 
 	public function initialize( &$Controller ) {
-
-		parent::initialize( $Controller );
 
 		$this->_Controller =& $Controller;
 	}
@@ -59,7 +62,7 @@ class ExtendedSessionComponent extends SessionComponent {
 	/**
 	 *	Returns the referer url if it is local, otherwise the home url.
 	 *
-	 *	@return string url.
+	 *	@return string Url.
 	 */
 
 	public function localReferer( ) {
@@ -72,12 +75,13 @@ class ExtendedSessionComponent extends SessionComponent {
 	/**
 	 *	Flashes a message of the given type, and redirects to another url
 	 *	if any.
+	 *	If type is a key of ExtendedSessionComponent::$classes, the
+	 *	corresponding value will be set as the message class.
 	 *
-	 *	@param string $type type of message to show
-	 *	@param string $message message to show.
-	 *	@param string $class class to use when rendering.
-	 *	@param mixed $url url to redirect to.
-	 *		If false, there will be no redirection.
+	 *	@param string $type Type of message to show.
+	 *	@param string $message Message to show.
+	 *	@param mixed $url Url to redirect to. If false, there will be no
+	 *		redirection.
 	 */
 
 	public function flash( $type, $message, $url = false ) {

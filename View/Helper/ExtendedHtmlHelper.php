@@ -6,7 +6,7 @@ App::uses( 'HtmlHelper', 'View/Helper' );
 
 /**
  *	Extends the capabilities of the original HtmlHelper.
- *	Typically meant to be used instead of it, using an alias in your controller :
+ *	Typically meant to be used instead of it, using an alias in your controller:
  *
  *	```
  *		public $helpers = array(
@@ -18,94 +18,16 @@ App::uses( 'HtmlHelper', 'View/Helper' );
  *
  *	@package Sprinkles.View.Helper
  *	@author Félix Girault <felix.girault@gmail.com>
+ *	@license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 class ExtendedHtmlHelper extends HtmlHelper {
 
 	/**
-	 *
-	 */
-
-	public $helpers = array( 'Time' );
-
-
-
-	/**
 	 *	
 	 */
 
-	protected $_typographicReplacements = array(
-		'simple' => array(
-			'...' => '…',
-			'\'' => '’',
-			'--' => '—'
-		),
-		'advanced' => array(
-			'/"([^"]*)"/U' => '«&thinsp;$1&thinsp;»'
-		)
-	);
-
-
-
-	/**
-	 *
-	 */
-
-	public function escape( $string, array $options = array( )) {
-
-		$options = array_merge(
-			array(
-				'typography' => true,
-				'lineEndings' => true,
-				'whitespace' => true
-			),
-			$options
-		)
-
-		extract( $options );
-
-		$string = htmlspecialchars( trim( $string ), ENT_NOQUOTES/*, 'UTF-8' */);
-
-		// typographic corrections
-
-		if ( $typography ) {
-			if ( !empty( $this->_typographicReplacements['simple'])) {
-				$string = str_replace(
-					array_keys( $this->_typographicReplacements['simple']),
-					array_values( $this->_typographicReplacements['simple']),
-					$string
-				);
-			}
-
-			if ( !empty( $this->_typographicReplacements['advanced'])) {
-				foreach ( $this->_typographicReplacements['advanced'] as $pattern => $replacement ) {
-					$string = preg_replace( $pattern, $replacement, $string );
-				}
-			}
-		}
-
-		// line endings conversion
-
-		if ( $lineEndings ) {
-			$string = nl2br( $string );
-		}
-
-		// whitespace cleaning
-
-		if ( $whitespace ) {
-			$string = preg_replace( '/\s\s+/U', ' ', $string );
-		}
-
-		return $string;
-	}
-
-
-
-	/**
-	 *
-	 */
-
-	public function link( $text, $url = null, $options = array( ), $confirmMessage = false ) {
+	public function link( $text, $url = null, array $options = array( ), $confirmMessage = false ) {
 
 		if ( $url !== null && !isset( $options['title'])) {
 			$options['title'] = $text;
@@ -120,7 +42,7 @@ class ExtendedHtmlHelper extends HtmlHelper {
 	 *
 	 */
 
-	public function accessibleLink( $text, $title, $url = null, $options = array( ), $confirmMessage = false ) {
+	public function accessibleLink( $text, $title, $url = null, array $options = array( ), $confirmMessage = false ) {
 
 		$options['title'] = $title;
 
@@ -133,7 +55,7 @@ class ExtendedHtmlHelper extends HtmlHelper {
 	 *
 	 */
 
-	public function accessibleImage( $text, $alt, $options = array( )) {
+	public function accessibleImage( $text, $alt, array $options = array( )) {
 
 		$options['alt'] = $alt;
 
@@ -146,7 +68,7 @@ class ExtendedHtmlHelper extends HtmlHelper {
 	 *
 	 */
 
-	public function title( $level, $text, $htmlAttributes = array( )) {
+	public function title( $level, $text, array $htmlAttributes = array( )) {
 
 		return $this->tag( 'h' . $level, $text, $htmlAttributes );
 	}
@@ -154,20 +76,24 @@ class ExtendedHtmlHelper extends HtmlHelper {
 
 
 	/**
-	 *
+	 *	Returns an Html5 `<time>` tag
 	 */
 
-	public function time( $date, $format, $pubdate = true ) {
+	public function time( $date, array $options = array( )) {
 
-		$options = array(
-			'datetime' => $this->Time->format( DATE_W3C, $date )
+		$options = array_merge(
+			array(
+				'datetime' => CakeTime::format( DATE_W3C, $date ),
+				'format' => ''
+			),
+			$options
 		);
 
-		if ( $pubdate ) {
-			$options[] = 'pubdate';
-		}
-
-		return $this->tag( 'time', $this->Time->format( $format, $date ), $options );
+		return $this->tag(
+			'time',
+			CakeTime::format( $options['format'], $date ),
+			$options
+		);
 	}
 
 
@@ -176,23 +102,24 @@ class ExtendedHtmlHelper extends HtmlHelper {
 	 *
 	 */
 
-	public function timeAgo( $date, $format, $end = '+1 week', $pubdate = true ) {
+	public function timeAgo( $date, array $options = array( )) {
 
-		$options = array(
-			'datetime' => $this->Time->format( DATE_W3C, $date )
+		$options = array_merge(
+			array(
+				'datetime' => CakeTime::format( DATE_W3C, $date ),
+				'format' => '',
+				'end' => '+1 week'
+			),
+			$options
 		);
-
-		if ( $pubdate ) {
-			$options[] = 'pubdate';
-		}
 
 		return $this->tag(
 			'time',
-			$this->Time->timeAgoInWords(
+			CakeTime::timeAgoInWords(
 				$date,
 				array(
-					'format' => $format,
-					'end' => $end
+					'format' => $options['format'],
+					'end' => $options['format']
 				)
 			),
 			$options
@@ -209,8 +136,8 @@ class ExtendedHtmlHelper extends HtmlHelper {
 
 		$html = '';
 
-		if ( $root !== '' && Sprinkles::endsWith( $root, DS )) {
-			$root .= DS;
+		if ( $root !== '' && Sprinkles::endsWith( $root, '/' )) {
+			$root .= '/';
 		}
 
 		foreach ( $urls as $folder => $name ) {
@@ -223,7 +150,7 @@ class ExtendedHtmlHelper extends HtmlHelper {
 			}
 		}
 
-		return $html;
+		return $this->output( $html );
 	}
 
 

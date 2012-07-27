@@ -6,6 +6,7 @@
  *
  *	@package Sprinkles.Model.Behavior
  *	@author Félix Girault <felix.girault@gmail.com>
+ *	@license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 class SluggableBehavior extends ModelBehavior {
@@ -13,18 +14,19 @@ class SluggableBehavior extends ModelBehavior {
 	/**
 	 *	Setup this behavior with the specified configuration settings.
 	 *
-	 *	### Settings :
-	 *		- 'field' - The field which the slug will be generated from,
-	 *			defaults to the model's displayField.
-	 *		- 'slug' - The field which the slug will be stored in, defaults
-	 *			to 'slug'.
-	 *		- 'slugCallback' - A function used to generate a slug, defaults
-	 *			to SluggableBehavior::slug. This function must accept one
-	 *			parameter (the original string), and return a string (the
-	 *			slug).
+	 *	### Settings
 	 *
-	 *	@param Model $model model using this behavior
-	 *	@param array $config configuration settings for $model
+	 *	- 'field' - The field which the slug will be generated from,
+	 *		defaults to the model's displayField.
+	 *	- 'slug' - The field which the slug will be stored in, defaults
+	 *		to 'slug'.
+	 *	- 'slugCallback' - A function used to generate a slug, defaults
+	 *		to SluggableBehavior::slug. This function must accept one
+	 *		parameter (the original string), and return a string (the
+	 *		slug).
+	 *
+	 *	@param Model $model Model using this behavior.
+	 *	@param array $config Configuration settings for $model.
 	 */
 
 	public function setup( Model $Model, $settings ) {
@@ -81,8 +83,8 @@ class SluggableBehavior extends ModelBehavior {
 	/**
 	 *	Generates a slug to be stored in database.
 	 *	
-	 *	@param Model $Model model using this behavior
-	 *	@return mixed false if the operation should abort
+	 *	@param Model $Model Model using this behavior.
+	 *	@return mixed False if the operation should abort.
 	 */
 
 	public function beforeSave( Model $Model ) {
@@ -108,11 +110,11 @@ class SluggableBehavior extends ModelBehavior {
 	/**
 	 *	Generates a slug on the fly.
 	 *	
-	 *	@param Model $model model using this behavior
-	 *	@param mixed $results the results of the find operation
-	 *	@param boolean $primary whether this model is being queried directly
-	 *		(vs. being queried as an association)
-	 *	@return mixed an array value will replace the value of $results -
+	 *	@param Model $model Model using this behavior.
+	 *	@param mixed $results The results of the find operation.
+	 *	@param boolean $primary Whether this model is being queried directly
+	 *		(vs. being queried as an association).
+	 *	@return mixed An array value will replace the value of $results -
 	 *		any other value will be ignored.
 	 */
 
@@ -143,8 +145,8 @@ class SluggableBehavior extends ModelBehavior {
 	/**
 	 *	Generates a slug from the given string.
 	 *
-	 *	@param string $string the string to generate a slug from
-	 *	@param string the generated slug
+	 *	@param string $string The string to generate a slug from.
+	 *	@param string The generated slug.
 	 */
 
 	public static function slug( $string ) {

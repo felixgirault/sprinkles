@@ -5,6 +5,7 @@
  *
  *	@package Sprinkles.Model.Behavior
  *	@author Félix Girault <felix.girault@gmail.com>
+ *	@license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 class ValidatableBehavior extends ModelBehavior {
@@ -12,9 +13,9 @@ class ValidatableBehavior extends ModelBehavior {
 	/**
 	 *	Checks if two fields are equal.	
 	 *
-	 *	@param Model $Model model using this behavior
-	 *	@param array $check must be passed as: array( 'field' => 'fieldName');
-	 *	@param string $otherField the other field name to compare
+	 *	@param Model $Model Model using this behavior
+	 *	@param array $check Must be passed as `array( 'field' => 'fieldName')`
+	 *	@param string $otherField The other field name to compare
 	 */
 
 	public function sameAs( Model $Model, $check, $otherField ) {

@@ -28,6 +28,7 @@
  *	
  *	@package Sprinkles.Lib.Route
  *	@author Félix Girault <felix.girault@gmail.com>
+ *	@license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 class EncodedRoute extends CakeRoute {
@@ -35,12 +36,13 @@ class EncodedRoute extends CakeRoute {
 	/**
 	 *	Constructor for an EncodedRoute.
 	 *
-	 *	### Options :
-	 *		- 'encode' - An array of parameters to encode.
-	 *		- 'encodeCallback' - A function used to encode parameters,
-	 *			defaults to EncodedRoute::encodeString.
-	 *		- 'decodeCallback' - A function used to decode parameters,
-	 *			defaults to EncodedRoute::decodeString.
+	 *	### Options
+	 *
+	 *	- 'encode' - An array of parameters to encode.
+	 *	- 'encodeCallback' - A function used to encode parameters, defaults to
+	 *		EncodedRoute::encodeString.
+	 *	- 'decodeCallback' - A function used to decode parameters, defaults to
+	 *		EncodedRoute::decodeString.
 	 *
 	 *	@see CakeRoute::__construct( )
 	 */
@@ -122,8 +124,8 @@ class EncodedRoute extends CakeRoute {
 	/**
 	 *	Converts the given number from base 10 to base 36.
 	 *
-	 *	@param int $number number to convert.
-	 *	@return string encoded number.
+	 *	@param int $number Number to convert.
+	 *	@return string Encoded number.
 	 */
 
 	public static function encodeNumber( $number ) {
@@ -136,8 +138,8 @@ class EncodedRoute extends CakeRoute {
 	/**
 	 *	Decodes the given number from base 36 to base 10.
 	 *
-	 *	@param string $number number to decode.
-	 *	@return int original number.
+	 *	@param string $number Number to decode.
+	 *	@return int Original number.
 	 */
 
 	public static function decodeNumber( $number ) {
@@ -150,8 +152,8 @@ class EncodedRoute extends CakeRoute {
 	/**
 	 *	Encodes the given string to base 64.
 	 *
-	 *	@param string $number number to convert.
-	 *	@return string encoded string.
+	 *	@param string $sting String to convert.
+	 *	@return string Encoded string.
 	 */
 
 	public static function encodeString( $string ) {
@@ -164,8 +166,8 @@ class EncodedRoute extends CakeRoute {
 	/**
 	 *	Decodes the given string from base 64.
 	 *
-	 *	@param string $number number to convert.
-	 *	@return string original string.
+	 *	@param string $sting String to convert.
+	 *	@return string Original string.
 	 */
 
 	public static function decodeString( $string ) {
