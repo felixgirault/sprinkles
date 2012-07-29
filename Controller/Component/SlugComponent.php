@@ -2,23 +2,13 @@
 
 /**
  *	Checks the integrity of slugs passed in urls
- *
- *	@package Sprinkles.Controller.Component
+ * 
  *	@author Félix Girault <felix.girault@gmail.com>
+ *	@package Sprinkles.Controller.Component
  *	@license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 class SlugComponent extends Component {
-
-	/**
-	 *	Params from the sets of results to use in the redirection.
-	 *
-	 *	@var array
-	 */
-
-	public $params = array( 'id', 'slug' );
-
-
 
 	/**
 	 *	A reference to the controller that is using the component.
@@ -27,28 +17,6 @@ class SlugComponent extends Component {
 	 */
 
 	protected $_Controller = null;
-
-
-
-	/**
-	 *	Constructor.
-	 *
-	 *	@param ComponentCollection $Collection A ComponentCollection this
-	 *		component can use to lazy load its components.
-	 *	@param array $settings Array of configuration settings.
-	 */
-
-	public function __construct( ComponentCollection $Collection, array $settings = array( )) {
-
-		parent::__construct( $Collection, $settings );
-
-		foreach ( $this->params as $key => $value ) {
-			if ( is_numeric( $key )) {
-				$this->params[ $value ] = array( );
-				unset( $this->params[ $key ]);
-			}
-		}
-	}
 
 
 
@@ -79,35 +47,86 @@ class SlugComponent extends Component {
 	 *		}
 	 *	```
 	 *
-	 *	@param array $data The set of model results.
 	 *	@param array $slug The slugs given in the url.
+	 *	@param array $data The set of model results.
 	 */
 
-	public function ensureIntegrity( array $data, array $slugs ) {
+	public function ensureIntegrity( array $slugs, array $data ) {
 
-		$valid = true;
 		$url = Router::parse( $this->_Controller->request->here( ));
+		$ok = true;
 
-		foreach ( $this->params as $key => $params ) {
-			$alias = isset( $params['alias'])
-				? $params['alias']
-				: $this->_Controller->modelClass;
-				
-			$field = isset( $params['field'])
-				? $params['field']
-				: $key;
+		foreach ( $slugs as $key => $value ) {
+			list( $model, $field ) = pluginSplit( $key );
 
-			if ( isset( $slugs[ $key ])) {
-				if ( $slugs[ $key ] !== $data[ $alias ][ $field ]) {
-					$valid = false;
-				}
+			if ( $model === null ) {
+				$model = $this->_Controller->modelClass;
 			}
 
-			$url[ $key ] = $data[ $alias ][ $field ];
+			if ( $value !== $data[ $model ][ $field ]) {
+				$url[ $value ] = $data[ $model ][ $field ];
+				$ok = false;
+			}
 		}
 
-		if ( !$valid ) {
-			$this->_Controller->redirect( $url, 301 );
+		if ( !$ok ) {
+			$this->_Controller->redirect( $this->_cleanUrl( $url ), 301 );
 		}
+	}
+
+
+
+	/**
+	 *	Since we can't get directly the current url as an array, let's do the
+	 *	dirty ourselves.
+	 *
+	 *	@param array $url The url to clean.
+	 *	@param string The cleaned url.
+	 */
+
+	protected function _cleanUrl( $url ) {
+
+		// removes useless passed args
+
+		$reserved = array( 'plugin', 'controller', 'action', 'named', 'pass' );
+		$params = $url;
+
+		foreach ( $reserved as $key ) {
+			unset( $params[ $key ]);
+		}
+
+		for ( $i = 0; $i < count( $params ); $i++ ) {
+			array_shift( $url['pass']);
+		}
+
+		if ( $url['plugin'] === null ) {
+			unset( $url['plugin']);
+		}
+
+		// named params
+
+		if ( !empty( $url['named'])) {
+			$url = array_merge( $url, $url['named']);
+		}
+
+		unset( $url['named']);
+
+		// passed args
+
+		if ( !empty( $url['pass'])) {
+			$url = array_merge( $url, $url['pass']);
+		}
+
+		unset( $url['pass']);
+
+		// query string
+
+		$query = $this->_Controller->request->query;
+
+		if ( !empty( $query )) {
+			$url['?'] = http_build_query( $query );
+		}
+
+		return Router::url( $url );
 	}
 }

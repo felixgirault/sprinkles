@@ -16,8 +16,8 @@ App::uses( 'AuthComponent', 'Controller/Component' );
  *		);
  *	```
  *	
- *	@package Sprinkles.Controller.Component
  *	@author Félix Girault <felix.girault@gmail.com>
+ *	@package Sprinkles.Controller.Component
  *	@license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -78,14 +78,14 @@ class ExtendedAuthComponent extends AuthComponent {
 
 		if ( strpos( $method, 'user' ) === 0 ) {
 			$key = substr( $method, strlen( 'user' ));
-			$key = lcfirst( $key );
+			$key = Inflector::tableize( $key );
 
 			return $this->user( $key );
 		}
 
 		if ( strpos( $method, 'userIs' ) === 0 ) {
 			$role = substr( $method, strlen( 'userIs' ));
-			$role = lcfirst( $role );
+			$role = Inflector::tableize( $role );
 
 			return $this->userIs( $role );
 		}

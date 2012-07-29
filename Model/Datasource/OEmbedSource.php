@@ -5,15 +5,17 @@ App::uses( 'HttpSocket', 'Network/Http' );
 
 
 /**
- *	@package Sprinkles.Model.Datasource
  *	@author Félix Girault <felix.girault@gmail.com>
+ *	@package Sprinkles.Model.Datasource
  *	@license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 class OEmbedSource extends DataSource {
 
 	/**
-	 *	@see DataSource::$_schema
+	 *	OEmbed schema.
+	 *
+	 *	@var array
 	 */
 
 	protected $_schema = array(

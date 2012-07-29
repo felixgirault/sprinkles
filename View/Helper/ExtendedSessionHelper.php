@@ -16,8 +16,8 @@ App::uses( 'SessionHelper', 'View/Helper' );
  *		);
  *	```
  *
- *	@package Sprinkles.View.Helper
  *	@author Félix Girault <felix.girault@gmail.com>
+ *	@package Sprinkles.View.Helper
  *	@license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 

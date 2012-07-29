@@ -3,8 +3,8 @@
 /**
  *	Provides some new validation methods that can be used by a model.
  *
- *	@package Sprinkles.Model.Behavior
  *	@author Félix Girault <felix.girault@gmail.com>
+ *	@package Sprinkles.Model.Behavior
  *	@license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 

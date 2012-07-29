@@ -3,8 +3,8 @@
 /**
  *	Extends the capabilities of a Model.
  *
- *	@package Sprinkles.Model.Behavior
  *	@author Félix Girault <felix.girault@gmail.com>
+ *	@package Sprinkles.Model.Behavior
  *	@license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 

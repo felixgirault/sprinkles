@@ -16,8 +16,8 @@ App::uses( 'SessionComponent', 'Controller/Component' );
  *		);
  *	```
  *
- *	@package Sprinkles.Controller.Component
  *	@author Félix Girault <felix.girault@gmail.com>
+ *	@package Sprinkles.Controller.Component
  *	@license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 

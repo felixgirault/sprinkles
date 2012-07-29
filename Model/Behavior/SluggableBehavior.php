@@ -4,8 +4,8 @@
  *	Generate slugs from model fields, either on the fly, either to store them
  *	in database.
  *
- *	@package Sprinkles.Model.Behavior
  *	@author Félix Girault <felix.girault@gmail.com>
+ *	@package Sprinkles.Model.Behavior
  *	@license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 

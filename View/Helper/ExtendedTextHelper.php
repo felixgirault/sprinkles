@@ -1,6 +1,7 @@
 <?php
 
 App::uses( 'TextHelper', 'View/Helper' );
+App::uses( 'Sanitize', 'Utility' );
 
 
 
@@ -16,8 +17,8 @@ App::uses( 'TextHelper', 'View/Helper' );
  *		);
  *	```
  *
- *	@package Sprinkles.View.Helper
  *	@author Félix Girault <felix.girault@gmail.com>
+ *	@package Sprinkles.View.Helper
  *	@license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -31,11 +32,11 @@ class ExtendedTextHelper extends TextHelper {
 	 */
 
 	public $prepare = array(
-		'flags' => ( ENT_COMPAT | ENT_HTML401 ),
+		'flags' => null,	// use default flags for htmlspecialchars( )
 		'escape' => true,
 		'typography' => true,
-		'lineEndings' => true,
-		'whitespace' => true,
+		'carriage' => true,
+		'whitespace' => false,
 		'simpleReplacements' => array(
 			'...' => '…',	// ellipsis
 			'\'' => '’',	// apostrophe
@@ -62,8 +63,8 @@ class ExtendedTextHelper extends TextHelper {
 	 *	- 'typography' - Wether or not to do some typographic corrections.
 	 *		See the 'simpleReplacements' and 'advancedReplacements'
 	 *		options below.
-	 *	- 'lineEndings' - Whether or not to replace line endings by a `<br />` 
-	 *		html tag.
+	 *	- 'carriage' - Whether or not to replace carriage returns by a
+	 *		`<br />` html tag.
 	 *	- 'whitespace' - Whether or not to clean whitespace. This means
 	 *		replacing multiple spaces with a unique space.
 	 *	- 'simpleReplacements' - An array of simple typographic replacements
@@ -83,7 +84,11 @@ class ExtendedTextHelper extends TextHelper {
 		// escaping
 
 		if ( $escape ) {
-			$string = htmlspecialchars( trim( $string ), $flags );
+			if ( $flags === null ) {
+				$string = htmlspecialchars( $string );
+			} else {
+				$string = htmlspecialchars( $string, $flags );
+			}
 		}
 
 		// typographic corrections
@@ -106,14 +111,14 @@ class ExtendedTextHelper extends TextHelper {
 
 		// line endings conversion
 
-		if ( $lineEndings ) {
+		if ( $carriage ) {
 			$string = nl2br( $string );
 		}
 
 		// whitespace cleaning
 
 		if ( $whitespace ) {
-			$string = preg_replace( '/\s\s+/U', ' ', $string );
+			$string = Sanitize::StripWhitespace( $string );
 		}
 
 		return $string;
