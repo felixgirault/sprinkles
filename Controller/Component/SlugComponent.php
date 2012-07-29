@@ -78,7 +78,7 @@ class SlugComponent extends Component {
 
 	/**
 	 *	Since we can't get directly the current url as an array, let's do the
-	 *	dirty ourselves.
+	 *	dirty stuff ourselves.
 	 *
 	 *	@param array $url The url to clean.
 	 *	@param string The cleaned url.
