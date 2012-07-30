@@ -1,7 +1,7 @@
 <?php
 
 /**
- *	Checks the integrity of slugs passed in urls
+ *	Checks the integrity of slugs passed in urls.
  * 
  *	@author Félix Girault <felix.girault@gmail.com>
  *	@package Sprinkles.Controller.Component
@@ -41,8 +41,8 @@ class SlugComponent extends Component {
 	 *
 	 *	```
 	 *		public function view( $id = null, $slug = '' ) {
+	 *	
 	 *			$data = $this->Model->findById( $id ):
-	 *			
 	 *			$this->Slug->ensureIntegrity( $data, array( 'slug' => $slug ));
 	 *		}
 	 *	```
@@ -53,7 +53,7 @@ class SlugComponent extends Component {
 
 	public function ensureIntegrity( array $slugs, array $data ) {
 
-		$url = Router::parse( $this->_Controller->request->here( ));
+		$url = $this->_url( );
 		$ok = true;
 
 		foreach ( $slugs as $key => $value ) {
@@ -64,13 +64,13 @@ class SlugComponent extends Component {
 			}
 
 			if ( $value !== $data[ $model ][ $field ]) {
-				$url[ $value ] = $data[ $model ][ $field ];
+				$url[ $field ] = $data[ $model ][ $field ];
 				$ok = false;
 			}
 		}
 
 		if ( !$ok ) {
-			$this->_Controller->redirect( $this->_cleanUrl( $url ), 301 );
+			$this->_Controller->redirect( $url, 301 );
 		}
 	}
 
@@ -80,11 +80,12 @@ class SlugComponent extends Component {
 	 *	Since we can't get directly the current url as an array, let's do the
 	 *	dirty stuff ourselves.
 	 *
-	 *	@param array $url The url to clean.
-	 *	@param string The cleaned url.
+	 *	@param array The current url.
 	 */
 
-	protected function _cleanUrl( $url ) {
+	protected function _url( ) {
+
+		$url = Router::parse( $this->_Controller->request->here( ));
 
 		// removes useless passed args
 
@@ -127,6 +128,6 @@ class SlugComponent extends Component {
 			$url['?'] = http_build_query( $query );
 		}
 
-		return Router::url( $url );
+		return $url;
 	}
 }
