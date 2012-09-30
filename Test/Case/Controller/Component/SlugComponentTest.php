@@ -4,7 +4,7 @@ App::uses( 'CakeRequest', 'Network' );
 App::uses( 'CakeResponse', 'Network' );
 App::uses( 'Controller', 'Controller' );
 App::uses( 'ComponentCollection', 'Controller' );
-App::uses( 'PagematronComponent', 'Controller/Component' );
+App::uses( 'SlugComponent', 'Sprinkles.Controller/Component' );
 
 
 
@@ -58,7 +58,7 @@ class SlugComponentTest extends CakeTestCase {
 		$CakeResponse = new CakeResponse( );
 
 		$this->Slug = new SlugComponent( $Collection );
-		$this->Controller = new TestPagematronController( $CakeRequest, $CakeResponse );
+		$this->Controller = new TestSlugController( $CakeRequest, $CakeResponse );
 
 		$this->Slug->startup( $this->Controller );
 	}
@@ -71,15 +71,9 @@ class SlugComponentTest extends CakeTestCase {
 
 	public function testEnsureIntegrity( ) {
 
-		// Test our adjust method with different parameter settings
-		$this->Slug->adjust( );
-		$this->assertEquals( 20, $this->Controller->paginate['limit']);
+		$article = $this->Controller->Article->findById( 1 );
 
-		$this->Slug->adjust( 'medium' );
-		$this->assertEquals( 50, $this->Controller->paginate['limit']);
-
-		$this->Slug->adjust( 'long' );
-		$this->assertEquals( 100, $this->Controller->paginate['limit']);
+		$this->Slug->ensureIntegrity( array( 'slug' => $article['Article']['slug']), $article );
 	}
 
 

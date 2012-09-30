@@ -1,7 +1,7 @@
 <?php
 
 /**
- *	Provides some new validation methods that can be used by a model.
+ *	Provides some additionnal validation methods to be used by a model.
  *
  *	@author Félix Girault <felix.girault@gmail.com>
  *	@package Sprinkles.Model.Behavior
@@ -11,9 +11,9 @@
 class ValidatableBehavior extends ModelBehavior {
 
 	/**
-	 *	Checks if two fields are equal.	
+	 *	Checks if two fields are equal.
 	 *
-	 *	@param Model $Model Model using this behavior
+	 *	@param Model $Model Model using this behavior.
 	 *	@param array $check Must be passed as `array( 'field' => 'fieldName')`
 	 *	@param string $otherField The other field name to compare
 	 */

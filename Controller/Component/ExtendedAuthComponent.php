@@ -97,8 +97,6 @@ class ExtendedAuthComponent extends AuthComponent {
 
 	/**
 	 *	Returns if the logged user has the given role(s).
-	 *	This method requires that the user model has a field named 'role',
-	 *	containing the user role.
 	 *
 	 *	@param mixed $role Either a string or an array of roles to test the user against.
 	 *	@return boolean True if the user has one of the given roles, otherwise false.

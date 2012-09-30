@@ -35,6 +35,7 @@ class ExtendedSessionHelper extends SessionHelper {
 	}
 
 
+
 	/**
 	 *	Returns all pending flash messages from the session.
 	 *

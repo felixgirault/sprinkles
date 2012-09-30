@@ -15,7 +15,7 @@ class ExtendedBehavior extends ModelBehavior {
 	 *	the form `array( 'field' => 'value' )`.
 	 *
 	 *	@param Model $Model Model using this behavior.
-	 *	@return array The array of fields.
+	 *	@param array $config Configuration settings.
 	 */
 
 	public function defaults( Model $Model ) {

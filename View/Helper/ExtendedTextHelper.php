@@ -31,7 +31,7 @@ class ExtendedTextHelper extends TextHelper {
 	 *	@see ExtendedTextHelper::prepare( )
 	 */
 
-	public $prepare = array(
+	protected $_prepare = array(
 		'flags' => null,	// use default flags for htmlspecialchars( )
 		'escape' => true,
 		'typography' => true,
@@ -46,6 +46,21 @@ class ExtendedTextHelper extends TextHelper {
 			'/"([^"]*)"/U' => '«&thinsp;$1&thinsp;»'	// quotation marks
 		)
 	);
+
+
+
+	/**
+	 *
+	 */
+	
+	public function __construct( View $View, array $settings = array( )) {
+
+		parent::__construct( $View, $settings );
+		
+		if ( isset( $settings['prepare']) && is_array( $settings['prepare'] )) {
+			$this->_prepare = array_merge( $this->_prepare, $settings['prepare']);
+		}
+	}
 
 
 
@@ -79,7 +94,7 @@ class ExtendedTextHelper extends TextHelper {
 
 	public function prepare( $string, array $options = array( )) {
 
-		extract( array_merge( $this->prepare, $options ));
+		extract( array_merge( $this->_prepare, $options ));
 
 		// escaping
 

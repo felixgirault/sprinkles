@@ -1,5 +1,9 @@
 <?php
 
+App::uses( 'Sprinkles', 'Sprinkles.Lib' );
+
+
+
 /**
  *	Checks the integrity of slugs passed in urls.
  * 
@@ -53,81 +57,26 @@ class SlugComponent extends Component {
 
 	public function ensureIntegrity( array $slugs, array $data ) {
 
-		$url = $this->_url( );
+		$url = Sprinkles::currentUrl( $this->_Controller->request );
 		$ok = true;
 
 		foreach ( $slugs as $key => $value ) {
-			list( $model, $field ) = pluginSplit( $key );
+			list( $alias, $field ) = pluginSplit( $key );
 
-			if ( $model === null ) {
-				$model = $this->_Controller->modelClass;
+			if ( $alias === null ) {
+				$alias = $this->_Controller->modelClass;
 			}
 
-			if ( $value !== $data[ $model ][ $field ]) {
-				$url[ $field ] = $data[ $model ][ $field ];
-				$ok = false;
-			}
+			if ( isset( $data[ $alias ][ $field ])) {
+				if ( $value !== $data[ $alias ][ $field ]) {
+					$url[ $field ] = $data[ $alias ][ $field ];
+					$ok = false;
+				}
+			}			
 		}
 
 		if ( !$ok ) {
 			$this->_Controller->redirect( $url, 301 );
 		}
-	}
-
-
-
-	/**
-	 *	Since we can't get directly the current url as an array, let's do the
-	 *	dirty stuff ourselves.
-	 *
-	 *	@param array The current url.
-	 */
-
-	protected function _url( ) {
-
-		$url = Router::parse( $this->_Controller->request->here( ));
-
-		// removes useless passed args
-
-		$reserved = array( 'plugin', 'controller', 'action', 'named', 'pass' );
-		$params = $url;
-
-		foreach ( $reserved as $key ) {
-			unset( $params[ $key ]);
-		}
-
-		for ( $i = 0; $i < count( $params ); $i++ ) {
-			array_shift( $url['pass']);
-		}
-
-		if ( $url['plugin'] === null ) {
-			unset( $url['plugin']);
-		}
-
-		// named params
-
-		if ( !empty( $url['named'])) {
-			$url = array_merge( $url, $url['named']);
-		}
-
-		unset( $url['named']);
-
-		// passed args
-
-		if ( !empty( $url['pass'])) {
-			$url = array_merge( $url, $url['pass']);
-		}
-
-		unset( $url['pass']);
-
-		// query string
-
-		$query = $this->_Controller->request->query;
-
-		if ( !empty( $query )) {
-			$url['?'] = http_build_query( $query );
-		}
-
-		return $url;
 	}
 }

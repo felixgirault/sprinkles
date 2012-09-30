@@ -24,9 +24,11 @@ class SluggableBehavior extends ModelBehavior {
 	 *		to SluggableBehavior::slug. This function must accept one
 	 *		parameter (the original string), and return a string (the
 	 *		slug).
+	 *	- 'persistent' - Whether the field should be stored in the database
+	 *		or generated on the fly when retrieving records.
 	 *
-	 *	@param Model $model Model using this behavior.
-	 *	@param array $config Configuration settings for $model.
+	 *	@param Model $Model Model using this behavior.
+	 *	@param array $config Configuration settings.
 	 */
 
 	public function setup( Model $Model, $settings ) {
@@ -46,43 +48,13 @@ class SluggableBehavior extends ModelBehavior {
 			$this->settings[ $alias ],
 			( array )$settings
 		);
-
-		// test of configuration
-
-		extract( $this->settings[ $alias ]);
-
-		if ( !is_callable( $slugCallback )) {
-			throw new CakeException( 'SluggableBehavior : \'slugCallback\' must be a valid callback.' );
-		}
-
-		$schema = $Model->schema( );
-
-		if ( !isset( $schema[ $field ])) {
-			throw new CakeException(
-				sprintf( 
-					'SluggableBehavior : the field \'%s\' doesn\'t exists in model %s.',
-					$field,
-					$alias
-				)
-			);
-		}
-
-		if ( $persistent && !isset( $schema[ $slug ])) {
-			throw new CakeException(
-				sprintf(
-					'SluggableBehavior : the field \'%s\' doesn\'t exists in model %s.',
-					$slug,
-					$alias
-				)
-			);
-		}
 	}
 
 
 
 	/**
 	 *	Generates a slug to be stored in database.
-	 *	
+	 *
 	 *	@param Model $Model Model using this behavior.
 	 *	@return mixed False if the operation should abort.
 	 */
@@ -109,8 +81,8 @@ class SluggableBehavior extends ModelBehavior {
 
 	/**
 	 *	Generates a slug on the fly.
-	 *	
-	 *	@param Model $model Model using this behavior.
+	 *
+	 *	@param Model $Model Model using this behavior.
 	 *	@param mixed $results The results of the find operation.
 	 *	@param boolean $primary Whether this model is being queried directly
 	 *		(vs. being queried as an association).
@@ -151,6 +123,6 @@ class SluggableBehavior extends ModelBehavior {
 
 	public static function slug( $string ) {
 
-		return Inflector::slug( $string, '-' );
-	} 
+		return strtolower( Inflector::slug( $string, '-' ));
+	}
 }

@@ -7,7 +7,7 @@
  *	Here's an example of how you may use this route class :
  *
  *	```
- *		App::uses( 'EncodedRoute', 'Sprinkles.Lib/Route' );
+ *		App::uses( 'EncodedRoute', 'Sprinkles.Lib/Routing/Route' );
  *
  *		Router::connect(
  *			'/articles/:id-:slug',
@@ -29,7 +29,7 @@
  *	views or controllers code.
  *	
  *	@author Félix Girault <felix.girault@gmail.com>
- *	@package Sprinkles.Lib.Route
+ *	@package Sprinkles.Lib.Routing.Route
  *	@license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 

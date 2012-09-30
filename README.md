@@ -1,4 +1,4 @@
-sprinkles
+Sprinkles
 =========
 
-A lightweight toolbox for CakePhp
+[WIP]

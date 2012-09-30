@@ -61,13 +61,16 @@ class ExtendedSessionComponent extends SessionComponent {
 
 	/**
 	 *	Returns the referer url if it is local, otherwise the home url.
+	 *	This method can be used in conjunction with flash( ).
 	 *
-	 *	@return string Url.
+	 *	@param string $default Default URL to use if HTTP_REFERER cannot be 
+	 *		read from headers.
+	 *	@return string Referring URL.
 	 */
 
-	public function localReferer( ) {
+	public function localReferer( $default = '/' ) {
 
-		return $this->_Controller->referer( '/', true );
+		return $this->_Controller->referer( $default, true );
 	}
 
 

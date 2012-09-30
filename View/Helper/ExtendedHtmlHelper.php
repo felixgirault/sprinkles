@@ -55,11 +55,11 @@ class ExtendedHtmlHelper extends HtmlHelper {
 	 *
 	 */
 
-	public function accessibleImage( $text, $alt, array $options = array( )) {
+	public function accessibleImage( $alt, $url, array $options = array( )) {
 
 		$options['alt'] = $alt;
 
-		return $this->image( $text, $options );
+		return $this->image( $url, $options );
 	}
 
 
@@ -68,9 +68,9 @@ class ExtendedHtmlHelper extends HtmlHelper {
 	 *
 	 */
 
-	public function title( $level, $text, array $htmlAttributes = array( )) {
+	public function title( $level, $text, array $options = array( )) {
 
-		return $this->tag( 'h' . $level, $text, $htmlAttributes );
+		return $this->tag( 'h' . $level, $text, $options );
 	}
 
 
@@ -129,24 +129,81 @@ class ExtendedHtmlHelper extends HtmlHelper {
 
 
 	/**
+	 *	Embeds elements markup into javascript variables.
+	 *
+	 *	@param string|array A single element name, or an array of element names.
+	 *	@return string A script tag containing the markup variables.
+	 */
+
+	public function markup( $markups, array $options = array( )) {
+
+		if ( !is_array( $markups )) {
+			$markups = array( $this->_markupName( $markups ) => $markups );
+		}
+
+		$this->scriptStart( $options );
+
+		foreach ( $markups as $var => $element ) {
+			printf(
+				"var %s = '%s';\n",
+				is_string( $var )
+					? $var
+					: $this->_markupName( $element ),
+				$this->_prepareMarkup( $this->_View->element( $element ))
+			);
+		}
+
+		return $this->scriptEnd( );
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	protected function _markupName( $element ) {
+		
+		$path = explode( '/', $element );
+		$name = array_pop( $path );
+		$name = strtoupper( $name ) . '_MARKUP';
+
+		return $name;
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	protected function _prepareMarkup( $markup ) {
+		
+		$markup = preg_replace( '/[\s\h\v]+/', ' ', $markup );
+		$markup = str_replace( '\'', '\\\'', $markup );
+
+		return $markup;
+	}
+
+
+
+	/**
 	 *
 	 */
 
 	public function scripts( array $urls, $root = '' ) {
 
-		$html = '';
-
-		if ( $root !== '' && Sprinkles::endsWith( $root, '/' )) {
+		if ( !empty( $root )) {
 			$root .= '/';
 		}
+
+		$html = '';
 
 		foreach ( $urls as $folder => $name ) {
 			if ( is_numeric( $folder )) {
 				$html .= $this->script( $root . $name );
 			} else {
-				foreach ( $name as $name ) {
-					$html .= $this->scripts( $names, $root . $folder );
-				}
+				$html .= $this->scripts( $name, $root . $folder );
 			}
 		}
 

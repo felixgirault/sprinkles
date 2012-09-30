@@ -1,12 +1,35 @@
 <?php
 
+App::uses( 'Router', 'Routing' );
+
+
+
 /**
+ *	Utilities.	
+ *
  *	@author Félix Girault <felix.girault@gmail.com>
  *	@package Sprinkles.Lib
  *	@license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 class Sprinkles {
+
+	/**
+	 *
+	 */
+
+	public static function bound( $var, $min, $max ) {
+
+		if ( $var < $min ) {
+			$var = $min;
+		}
+
+		if ( $var > $max ) {
+			$var = $max;
+		}
+
+		return $var;
+	}
 
 	/**
 	 *	Tests if the string $haystack ends with $needle.
@@ -24,6 +47,62 @@ class Sprinkles {
 			return false;
 		}
 
-		return ( substr_compare( $haystack, DS, -$needleLength, $needleLength ) === 0 );
+		return ( substr_compare( $haystack, $needle, -$needleLength, $needleLength ) === 0 );
+	}
+
+
+
+	/**
+	 *	Returns the current URL as an array understandable by Router::url( ).
+	 *
+	 *	@return array The current URL.
+	 */
+
+	public static function currentUrl( CakeRequest $Request ) {
+
+		$url = Router::parse( $Request->here( ));
+
+		// removes useless passed args
+
+		$reserved = array( 'plugin', 'controller', 'action', 'named', 'pass' );
+		$params = $url;
+
+		foreach ( $reserved as $key ) {
+			unset( $params[ $key ]);
+		}
+
+		for ( $i = 0; $i < count( $params ); $i++ ) {
+			array_shift( $url['pass']);
+		}
+
+		if ( $url['plugin'] === null ) {
+			unset( $url['plugin']);
+		}
+
+		// named params
+
+		if ( !empty( $url['named'])) {
+			$url = array_merge( $url, $url['named']);
+		}
+
+		unset( $url['named']);
+
+		// passed args
+
+		if ( !empty( $url['pass'])) {
+			$url = array_merge( $url, $url['pass']);
+		}
+
+		unset( $url['pass']);
+
+		// query string
+
+		$query = $Request->query;
+
+		if ( !empty( $query )) {
+			$url['?'] = http_build_query( $query );
+		}
+
+		return $url;
 	}
 }
