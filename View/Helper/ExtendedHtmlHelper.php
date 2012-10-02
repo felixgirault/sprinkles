@@ -24,10 +24,10 @@ App::uses( 'HtmlHelper', 'View/Helper' );
 class ExtendedHtmlHelper extends HtmlHelper {
 
 	/**
-	 *	
+	 *
 	 */
 
-	public function link( $text, $url = null, array $options = array( ), $confirmMessage = false ) {
+	public function link( $text, $url = null, $options = array( ), $confirmMessage = false ) {
 
 		if ( $url !== null && !isset( $options['title'])) {
 			$options['title'] = $text;
@@ -163,7 +163,7 @@ class ExtendedHtmlHelper extends HtmlHelper {
 	 */
 
 	protected function _markupName( $element ) {
-		
+
 		$path = explode( '/', $element );
 		$name = array_pop( $path );
 		$name = strtoupper( $name ) . '_MARKUP';
@@ -178,7 +178,7 @@ class ExtendedHtmlHelper extends HtmlHelper {
 	 */
 
 	protected function _prepareMarkup( $markup ) {
-		
+
 		$markup = preg_replace( '/[\s\h\v]+/', ' ', $markup );
 		$markup = str_replace( '\'', '\\\'', $markup );
 
@@ -214,7 +214,7 @@ class ExtendedHtmlHelper extends HtmlHelper {
 
 	/**
 	 *	Cleans up the default output by adding a carriage return.
-	 *	
+	 *
 	 *	@see HtmlHelper::output( )
 	 */
 

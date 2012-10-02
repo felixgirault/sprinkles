@@ -14,9 +14,17 @@ class Token extends AppModel {
 	 *
 	 */
 
+	public $recursive = -1;
+
+
+
+	/**
+	 *
+	 */
+
 	public function buildList( array $tokens ) {
 
-		$query = 'INSERT IGNORE INTO tokens ( name ) '
+		$query = 'INSERT IGNORE INTO `tokens` ( `name` ) '
 			. 'VALUES ( \'' . implode( '\' ), ( \'', $tokens ) . '\' );';
 
 		$this->query( $query );
@@ -25,7 +33,9 @@ class Token extends AppModel {
 			'list',
 			array(
 				'conditions' => array(
-					'name IN( \'' . implode( '\', \'', $tokens ) . '\' )'
+					array(
+						$this->alias . '.name' => $tokens
+					)
 				)
 			)
 		);

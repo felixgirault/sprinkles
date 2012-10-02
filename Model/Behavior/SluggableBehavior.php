@@ -31,7 +31,7 @@ class SluggableBehavior extends ModelBehavior {
 	 *	@param array $config Configuration settings.
 	 */
 
-	public function setup( Model $Model, $settings ) {
+	public function setup( Model $Model, $settings = array( )) {
 
 		$alias = $Model->alias;
 

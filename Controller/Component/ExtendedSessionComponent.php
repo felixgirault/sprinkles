@@ -25,7 +25,7 @@ class ExtendedSessionComponent extends SessionComponent {
 
 	/**
 	 *	The Html classes that will be used for flash messages markup.
-	 *	
+	 *
 	 *	@var array
 	 */
 
@@ -52,9 +52,9 @@ class ExtendedSessionComponent extends SessionComponent {
 	 *	@param Controller $Controller Controller using this component.
 	 */
 
-	public function initialize( &$Controller ) {
+	public function initialize( Controller $Controller ) {
 
-		$this->_Controller =& $Controller;
+		$this->_Controller = $Controller;
 	}
 
 
@@ -63,7 +63,7 @@ class ExtendedSessionComponent extends SessionComponent {
 	 *	Returns the referer url if it is local, otherwise the home url.
 	 *	This method can be used in conjunction with flash( ).
 	 *
-	 *	@param string $default Default URL to use if HTTP_REFERER cannot be 
+	 *	@param string $default Default URL to use if HTTP_REFERER cannot be
 	 *		read from headers.
 	 *	@return string Referring URL.
 	 */

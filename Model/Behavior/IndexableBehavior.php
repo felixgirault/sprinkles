@@ -25,7 +25,7 @@ class IndexableBehavior extends ModelBehavior {
 	 *	@param array $config Configuration settings.
 	 */
 
-	public function setup( Model $Model, $settings ) {
+	public function setup( Model $Model, $settings = array( )) {
 
 		$alias = $Model->alias;
 
@@ -73,7 +73,15 @@ class IndexableBehavior extends ModelBehavior {
 		$id = $Model->id;
 		$alias = $Model->alias;
 
+		$Model->Index->deleteAll(
+			array(
+				'model_id' => $id,
+				'model_name' => $alias
+			)
+		);
+
 		extract( $this->settings[ $alias ]);
+		$weightedTokens = array( );
 
 		foreach ( $fields as $field => $weight ) {
 			$tokens = call_user_func(
@@ -81,27 +89,87 @@ class IndexableBehavior extends ModelBehavior {
 				$Model->data[ $alias ][ $field ]
 			);
 
-			$list = $Model->Index->Token->buildList( $tokens );
-			$data = array( );
+			foreach ( $tokens as $token ) {
+				if ( !isset( $weightedTokens[ $token ])) {
+					$weightedTokens[ $token ] = 0;
+				}
 
-			foreach ( $list as $tokenId => $token ) {
-				$data[] = array(
-					'token_id' => $tokenId,
-					'model_id' => $id,
-					'model_name' => $alias,
-					'weight' => $weight
-				);
+				$weightedTokens[ $token ] += $weight;
 			}
-
-			$Model->Index->deleteAll(
-				array(
-					'model_id' => $id,
-					'model_name' => $alias
-				)
-			);
-
-			$Model->Index->saveMany( $data );
 		}
+
+		$list = $Model->Index->Token->buildList( array_keys( $weightedTokens ));
+		$data = array( );
+
+		foreach ( $list as $tokenId => $token ) {
+			$data[] = array(
+				'token_id' => $tokenId,
+				'model_id' => $id,
+				'model_name' => $alias,
+				'weight' => $weightedTokens[ $token ]
+			);
+		}
+
+		$Model->Index->saveMany( $data );
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function search( Model $Model, $terms ) {
+
+		$alias = $Model->alias;
+		$indexAlias = $Model->Index->alias;
+		$tokenAlias = $Model->Index->Token->alias;
+
+		$tokens = call_user_func(
+			$this->settings[ $alias ]['tokenizeCallback'],
+			$terms
+		);
+
+		$db = $Model->getDataSource( );
+		$subQuery = $db->buildStatement(
+			array(
+				'fields' => array( "`$tokenAlias`.`id`" ),
+				'table' => $db->fullTableName( $Model->Index->Token ),
+				'alias' => $tokenAlias,
+				'limit' => null,
+				'offset' => null,
+				'joins' => array( ),
+				'conditions' => array( 'name' => $tokens ),
+				'order' => null,
+				'group' => null
+			),
+			$Model->Index->Token
+		);
+
+		$indices = $Model->Index->find(
+			'all',
+			array(
+				'fields' => array(
+					'model_id'
+				),
+				'conditions' => array(
+					$db->expression( "`$indexAlias`.`token_id` IN ( $subQuery )" ),
+					'model_name' => $alias
+				),
+				'order' => "`$indexAlias`.`weight`"
+			)
+		);
+
+		return $Model->find(
+			'all',
+			array(
+				'conditions' => array(
+					array(
+						$Model->alias . '.id' => Set::extract( "/$indexAlias/model_id", $indices )
+					)
+				)
+			)
+		);
 	}
 
 

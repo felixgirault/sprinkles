@@ -6,7 +6,7 @@ App::uses( 'Sprinkles', 'Sprinkles.Lib' );
 
 /**
  *	Checks the integrity of slugs passed in urls.
- * 
+ *
  *	@author Félix Girault <felix.girault@gmail.com>
  *	@package Sprinkles.Controller.Component
  *	@license MIT License (http://www.opensource.org/licenses/mit-license.php)
@@ -30,9 +30,9 @@ class SlugComponent extends Component {
 	 *	@param Controller $Controller Controller using this component.
 	 */
 
-	public function initialize( &$Controller ) {
+	public function initialize( Controller $Controller ) {
 
-		$this->_Controller =& $Controller;
+		$this->_Controller = $Controller;
 	}
 
 
@@ -40,12 +40,12 @@ class SlugComponent extends Component {
 	/**
 	 *	Checks if the given slugs matches the ones in the given set of results.
 	 *	If not, this function triggers a 301 HTTP redirection to the correct url.
-	 *	
+	 *
 	 *	Example usage in a controller action :
 	 *
 	 *	```
 	 *		public function view( $id = null, $slug = '' ) {
-	 *	
+	 *
 	 *			$data = $this->Model->findById( $id ):
 	 *			$this->Slug->ensureIntegrity( $data, array( 'slug' => $slug ));
 	 *		}
@@ -72,7 +72,7 @@ class SlugComponent extends Component {
 					$url[ $field ] = $data[ $alias ][ $field ];
 					$ok = false;
 				}
-			}			
+			}
 		}
 
 		if ( !$ok ) {

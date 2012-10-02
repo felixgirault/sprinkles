@@ -14,6 +14,14 @@ class Index extends AppModel {
 	 *
 	 */
 
+	public $recursive = -1;
+
+
+
+	/**
+	 *
+	 */
+
 	public $belongsTo = array(
 		'Token' => array(
 			'className' => 'Sprinkles.Token'
