@@ -22,12 +22,25 @@ class Token extends AppModel {
 	 *
 	 */
 
+	public $validate = array(
+		'name' => 'isUnique'
+	);
+
+
+
+	/**
+	 *
+	 */
+
 	public function buildList( array $tokens ) {
 
-		$query = 'INSERT IGNORE INTO `tokens` ( `name` ) '
-			. 'VALUES ( \'' . implode( '\' ), ( \'', $tokens ) . '\' );';
+		$data = array( );
 
-		$this->query( $query );
+		foreach ( $tokens as $token ) {
+			$data[ ] = array( 'name' => $token );
+		}
+
+		$this->saveMany( $data );
 
 		return $this->find(
 			'list',

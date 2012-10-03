@@ -49,9 +49,9 @@ class IndexableBehavior extends ModelBehavior {
 					'Index' => array(
 						'className' => 'Sprinkles.Index',
 						'foreignKey' => 'model_id',
-            				'conditions' => array(
-            					'model_name' => $alias
-            				),
+						'conditions' => array(
+							'model_name' => $alias
+						),
 					)
 				)
 			),
@@ -72,13 +72,6 @@ class IndexableBehavior extends ModelBehavior {
 
 		$id = $Model->id;
 		$alias = $Model->alias;
-
-		$Model->Index->deleteAll(
-			array(
-				'model_id' => $id,
-				'model_name' => $alias
-			)
-		);
 
 		extract( $this->settings[ $alias ]);
 		$weightedTokens = array( );
@@ -110,6 +103,13 @@ class IndexableBehavior extends ModelBehavior {
 			);
 		}
 
+		$Model->Index->deleteAll(
+			array(
+				'model_id' => $id,
+				'model_name' => $alias
+			)
+		);
+
 		$Model->Index->saveMany( $data );
 	}
 
@@ -119,7 +119,7 @@ class IndexableBehavior extends ModelBehavior {
 	 *
 	 */
 
-	public function search( Model $Model, $terms ) {
+	public function searchConditions( Model $Model, $terms ) {
 
 		$alias = $Model->alias;
 		$indexAlias = $Model->Index->alias;
@@ -131,7 +131,8 @@ class IndexableBehavior extends ModelBehavior {
 		);
 
 		$db = $Model->getDataSource( );
-		$subQuery = $db->buildStatement(
+
+		$tokensQuery = $db->buildStatement(
 			array(
 				'fields' => array( "`$tokenAlias`.`id`" ),
 				'table' => $db->fullTableName( $Model->Index->Token ),
@@ -139,34 +140,34 @@ class IndexableBehavior extends ModelBehavior {
 				'limit' => null,
 				'offset' => null,
 				'joins' => array( ),
-				'conditions' => array( 'name' => $tokens ),
+				'conditions' => array(
+					"`$tokenAlias`.`name` IN ( '" . implode( "', '", $tokens ) . "' )"
+				),
 				'order' => null,
 				'group' => null
 			),
 			$Model->Index->Token
 		);
 
-		$indices = $Model->Index->find(
-			'all',
+		$Model->unbindModel(
 			array(
-				'fields' => array(
-					'model_id'
-				),
-				'conditions' => array(
-					$db->expression( "`$indexAlias`.`token_id` IN ( $subQuery )" ),
-					'model_name' => $alias
-				),
-				'order' => "`$indexAlias`.`weight`"
+				'hasMany' => array( 'Index' )
 			)
 		);
 
-		return $Model->find(
-			'all',
-			array(
-				'conditions' => array(
-					array(
-						$Model->alias . '.id' => Set::extract( "/$indexAlias/model_id", $indices )
-					)
+		return array(
+			'joins' => array(
+				array(
+					'table' => $Model->Index->table,
+					'alias' => $indexAlias,
+					'type' => 'INNER',
+					'conditions' => array(
+						"`$indexAlias`.`model_id` = `$alias`.`id`",
+						"`$indexAlias`.`model_name`" => $alias,
+						"`$indexAlias`.`token_id` IN ( $tokensQuery )"
+					),
+					'group' => "`$indexAlias`.`weight`",
+					'order' => "`$indexAlias`.`weight`"
 				)
 			)
 		);
