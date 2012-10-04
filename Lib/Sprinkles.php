@@ -5,7 +5,7 @@ App::uses( 'Router', 'Routing' );
 
 
 /**
- *	Utilities.	
+ *	Utilities.
  *
  *	@author Félix Girault <felix.girault@gmail.com>
  *	@package Sprinkles.Lib
@@ -31,6 +31,8 @@ class Sprinkles {
 		return $var;
 	}
 
+
+
 	/**
 	 *	Tests if the string $haystack ends with $needle.
 	 *
@@ -53,12 +55,13 @@ class Sprinkles {
 
 
 	/**
-	 *	Returns the current URL as an array understandable by Router::url( ).
+	 *	Returns the request URL as an array understandable by Router::url( ).
 	 *
-	 *	@return array The current URL.
+	 *	@param CakeRequest The request.
+	 *	@return array The request URL.
 	 */
 
-	public static function currentUrl( CakeRequest $Request ) {
+	public static function url( CakeRequest $Request ) {
 
 		$url = Router::parse( $Request->here( ));
 

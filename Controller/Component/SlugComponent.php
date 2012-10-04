@@ -48,16 +48,19 @@ class SlugComponent extends Component {
 	 *
 	 *			$data = $this->Model->findById( $id ):
 	 *			$this->Slug->ensureIntegrity( $data, array( 'slug' => $slug ));
+	 *
+	 *			// or simply
+	 *			$this->Slug->ensureIntegrity( $data, compact( 'slug' ));
 	 *		}
 	 *	```
 	 *
-	 *	@param array $slug The slugs given in the url.
 	 *	@param array $data The set of model results.
+	 *	@param array $slug The slugs given in the url.
 	 */
 
-	public function ensureIntegrity( array $slugs, array $data ) {
+	public function ensureIntegrity( array $data, array $slugs ) {
 
-		$url = Sprinkles::currentUrl( $this->_Controller->request );
+		$url = Sprinkles::url( $this->_Controller->request );
 		$ok = true;
 
 		foreach ( $slugs as $key => $value ) {
