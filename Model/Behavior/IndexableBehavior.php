@@ -119,7 +119,7 @@ class IndexableBehavior extends ModelBehavior {
 	 *
 	 */
 
-	public function searchConditions( Model $Model, $terms ) {
+	public function searchOptions( Model $Model, $terms ) {
 
 		$alias = $Model->alias;
 		$indexAlias = $Model->Index->alias;
