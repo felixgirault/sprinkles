@@ -143,8 +143,8 @@ class IndexableBehavior extends ModelBehavior {
 				'conditions' => array(
 					"`$tokenAlias`.`name` IN ( '" . implode( "', '", $tokens ) . "' )"
 				),
-				'order' => null,
-				'group' => null
+				'group' => null,
+				'order' => null
 			),
 			$Model->Index->Token
 		);
@@ -165,11 +165,10 @@ class IndexableBehavior extends ModelBehavior {
 						"`$indexAlias`.`model_id` = `$alias`.`id`",
 						"`$indexAlias`.`model_name`" => $alias,
 						"`$indexAlias`.`token_id` IN ( $tokensQuery )"
-					),
-					'group' => "`$indexAlias`.`weight`",
-					'order' => "`$indexAlias`.`weight`"
+					)
 				)
-			)
+			),
+			'order' => "`$indexAlias`.`weight` DESC"
 		);
 	}
 

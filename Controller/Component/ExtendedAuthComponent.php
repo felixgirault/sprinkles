@@ -34,74 +34,12 @@ class ExtendedAuthComponent extends AuthComponent {
 
 
 	/**
-	 *
-	 */
-
-	protected $_roles = array( );
-
-
-
-	/**
 	 *	A list of actions and corresponding user roles required to access them.
 	 *
 	 *	@var array
 	 */
 
 	protected $_roleBasedAllowedActions = array( );
-
-
-
-	/**
-	 *	Constructor.
-	 *
-	 *	@param ComponentCollection $Collection A ComponentCollection this
-	 *		component can use to lazy load its components.
-	 *	@param array $settings Array of configuration settings.
-	 */
-
-	public function __construct( ComponentCollection $Collection, $settings = array( )) {
-
-		parent::__construct( $Collection, $settings );
-
-		if ( isset( $settings['roles']) && is_array( $settings['roles'])) {
-			$this->_flatten( $settings['roles']);
-		}
-	}
-
-
-
-	/**
-	 *
-	 */
-
-	protected function _flatten( $roles ) {
-
-		$flattened = array( );
-
-		foreach ( $roles as $role => $contained ) {
-			if ( is_array( $contained )) {
-				$flattened = array_merge(
-					$flattened,
-					$this->_flatten( $contained )
-				);
-			} else {
-				$role = $contained;
-			}
-
-			$flattened[ ] = $role;
-
-			if ( isset( $this->_roles[ $role ])) {
-				$this->_roles[ $role ] = array_merge(
-					$this->_roles[ $role ],
-					$flattened
-				);
-			} else {
-				$this->_roles[ $role ] = $flattened;
-			}
-		}
-
-		return $flattened;
-	}
 
 
 
@@ -113,12 +51,12 @@ class ExtendedAuthComponent extends AuthComponent {
 
 	public function startup( Controller $Controller ) {
 
-		$action = strtolower( $this->request->params['action']);
+		$action = strtolower( $Controller->request->params['action']);
 
 		if ( isset( $this->_roleBasedAllowedActions[ $action ])
 			&& $this->userIs( $this->_roleBasedAllowedActions[ $action ])
 		) {
-			return true;
+			$this->allow( $action );
 		}
 
 		return parent::startup( $Controller );
@@ -204,20 +142,6 @@ class ExtendedAuthComponent extends AuthComponent {
 			$roles = array( $roles );
 		}
 
-		$userRole = $this->user( $this->roleField );
-
-		foreach ( $roles as $role ) {
-			if (
-				( $role == $userRole )
-				|| (
-					isset( $this->_roles[ $role ])
-					&& in_array( $userRole, $this->_roles[ $role ])
-				)
-			) {
-				return true;
-			}
-		}
-
-		return false;
+		return in_array( $this->user( $this->roleField ), $roles );
 	}
 }
