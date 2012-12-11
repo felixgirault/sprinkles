@@ -4,25 +4,16 @@
  *
  *
  *	@author Félix Girault <felix.girault@gmail.com>
- *	@package Sprinkles.Model
+ *	@package Sprinkles.Model.Behavior
  *	@license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-class Token extends AppModel {
+abstract class ThumbnailGenerator {
 
 	/**
 	 *
 	 */
 
-	public $recursive = -1;
+	public abstract function generate( array $options, $source, $destination );
 
-
-
-	/**
-	 *
-	 */
-
-	public $validate = array(
-		'name' => 'isUnique'
-	);
 }

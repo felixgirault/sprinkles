@@ -84,7 +84,7 @@ class ThumbnailHelper extends AppHelper {
 		return $this->url( '/img/thumbs/' . rand( 1, 14 ) . '.jpg' );
 
 		$hash = md5( $key );
-		$level = Sprinkles::bound( $this->_level, 2, strlen( $hash ) - 1 );
+		$level = Sprinkles::bound( 2, $this->_level, strlen( $hash ) - 1 );
 
 		$start = substr( $hash, 0, $level );
 		$path = preg_replace( '/([a-z0-9])/i', '$1/', $start );

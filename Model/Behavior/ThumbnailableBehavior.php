@@ -1,7 +1,7 @@
 <?php
 
 /**
- *	Provides some additionnal validation methods to be used by a model.
+ *
  *
  *	@author Félix Girault <felix.girault@gmail.com>
  *	@package Sprinkles.Model.Behavior

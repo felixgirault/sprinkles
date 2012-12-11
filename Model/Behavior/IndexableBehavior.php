@@ -16,10 +16,9 @@ class IndexableBehavior extends ModelBehavior {
 	 *	### Settings
 	 *
 	 *	- 'fields' - An array of fields and their respective weights.
-	 *	- 'tokenizeCallback' - A function used to generate tokens, defaults
-	 *		to IndexableBehavior::tokenize. This function must accept one
-	 *		parameter (the original string), and return an array of strings
-	 *		(the extracted tokens).
+	 *	- 'tokenFilter' - A function used to filter tokens, defaults
+	 *		to IndexableBehavior::filterToken. This function must accept one
+	 *		parameter (the original token), and return a filtered token.
 	 *
 	 *	@param Model $Model Model using this behavior.
 	 *	@param array $config Configuration settings.
@@ -34,7 +33,7 @@ class IndexableBehavior extends ModelBehavior {
 				'fields' => array(
 					$Model->displayField => 1
 				),
-				'tokenizeCallback' => 'IndexableBehavior::tokenize'
+				'tokenFilter' => 'IndexableBehavior::filterToken'
 			);
 		}
 
@@ -62,7 +61,7 @@ class IndexableBehavior extends ModelBehavior {
 
 
 	/**
-	 *
+	 *	Indexes data from the model.
 	 *
 	 *	@param Model $Model Model using this behavior.
 	 *	@param boolean $created Whether the record was created or updated.
@@ -72,14 +71,14 @@ class IndexableBehavior extends ModelBehavior {
 
 		$id = $Model->id;
 		$alias = $Model->alias;
-
-		extract( $this->settings[ $alias ]);
 		$weightedTokens = array( );
 
+		extract( $this->settings[ $alias ]);
+
 		foreach ( $fields as $field => $weight ) {
-			$tokens = call_user_func(
-				$tokenizeCallback,
-				$Model->data[ $alias ][ $field ]
+			$tokens = array_map(
+				$tokenFilter,
+				$this->tokenize( $data[ $alias ][ $field ])
 			);
 
 			foreach ( $tokens as $token ) {
@@ -91,7 +90,7 @@ class IndexableBehavior extends ModelBehavior {
 			}
 		}
 
-		$list = $Model->Index->Token->buildList( array_keys( $weightedTokens ));
+		$list = $this->_tokenList( $Model, array_keys( $weightedTokens ));
 		$data = array( );
 
 		foreach ( $list as $tokenId => $token ) {
@@ -119,17 +118,93 @@ class IndexableBehavior extends ModelBehavior {
 	 *
 	 */
 
-	public function searchOptions( Model $Model, $terms ) {
+	protected function _tokenList( Model $Model, array $tokens ) {
+
+		$data = array( );
+
+		foreach ( $tokens as $token ) {
+			$data[ ] = array( 'name' => $token );
+		}
+
+		$Model->Index->Token->saveMany( $data );
+
+		return $Model->Index->Token->find(
+			'list',
+			array(
+				'conditions' => array(
+					array(
+						$Model->Index->Token->alias . '.name' => $tokens
+					)
+				)
+			)
+		);
+	}
+
+
+
+	/**
+	 *	Generates and returns search options from the given query.
+	 *
+	 *	@param Model $Model Model using this behavior.
+	 *	@param string $query The search query.
+	 *	@return array Search options.
+	 */
+
+	public function optionsFromQuery( Model $Model, $query ) {
+
+		$tokens = array_map(
+			$this->settings[ $Model->alias ]['tokenFilter'],
+			$this->tokenize( $query )
+		);
+
+		return $this->_optionsFromTokens( $Model, $tokens );
+	}
+
+
+
+	/**
+	 *	Generates and returns search options from the given record.
+	 *
+	 *	@param Model $Model Model using this behavior.
+	 *	@param array $data The record data.
+	 *	@return array Search options.
+	 */
+
+	public function optionsFromRecord( Model $Model, array $data ) {
+
+		$alias = $Model->alias;
+		$tokens = array( );
+
+		extract( $this->settings[ $alias ]);
+
+		foreach ( $fields as $field => $weight ) {
+			$tokens += array_map(
+				$tokenFilter,
+				$this->tokenize( $data[ $alias ][ $field ])
+			);
+		}
+
+		$options = $this->_optionsFromTokens( $Model, $tokens );
+		$options['conditions']["`$alias`.`id` !="] = $data[ $alias ][ $Model->primaryKey ];
+
+		return $options;
+	}
+
+
+
+	/**
+	 *	Generates and returns search options from the given tokens.
+	 *
+	 *	@param Model $Model Model using this behavior.
+	 *	@param array $token The tokens.
+	 *	@return array Search options.
+	 */
+
+	protected function _optionsFromTokens( Model $Model, array $tokens ) {
 
 		$alias = $Model->alias;
 		$indexAlias = $Model->Index->alias;
 		$tokenAlias = $Model->Index->Token->alias;
-
-		$tokens = call_user_func(
-			$this->settings[ $alias ]['tokenizeCallback'],
-			$terms
-		);
-
 		$db = $Model->getDataSource( );
 
 		$tokensQuery = $db->buildStatement(
@@ -149,11 +224,7 @@ class IndexableBehavior extends ModelBehavior {
 			$Model->Index->Token
 		);
 
-		$Model->unbindModel(
-			array(
-				'hasMany' => array( 'Index' )
-			)
-		);
+		$Model->unbindModel( array( 'hasMany' => array( 'Index' )));
 
 		return array(
 			'joins' => array(
@@ -168,6 +239,7 @@ class IndexableBehavior extends ModelBehavior {
 					)
 				)
 			),
+			'group' => "`$alias`.`id`",
 			'order' => "`$indexAlias`.`weight` DESC"
 		);
 	}
@@ -181,15 +253,22 @@ class IndexableBehavior extends ModelBehavior {
 	 *	@return array The extracted tokens.
 	 */
 
-	public static function tokenize( $string ) {
+	public function tokenize( $string ) {
 
-		$words = preg_split( '/[[:punct:][:space:]]+/', $string, -1, PREG_SPLIT_NO_EMPTY );
-		$tokens = array( );
+		return preg_split( '/[[:punct:][:space:]]+/', $string, -1, PREG_SPLIT_NO_EMPTY );
+	}
 
-		foreach ( $words as $word ) {
-			$tokens[] = strtolower( Inflector::slug( $word, '-' ));
-		}
 
-		return $tokens;
+
+	/**
+	 *	Filters the given token.
+	 *
+	 *	@param string $tokens The original token.
+	 *	@return string The filtered token.
+	 */
+
+	public static function filterToken( $token ) {
+
+		return strtolower( Inflector::slug( $token ));
 	}
 }

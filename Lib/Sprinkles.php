@@ -18,17 +18,17 @@ class Sprinkles {
 	 *
 	 */
 
-	public static function bound( $var, $min, $max ) {
+	public static function bound( $min, $value, $max ) {
 
-		if ( $var < $min ) {
-			$var = $min;
+		if ( $value < $min ) {
+			return $min;
 		}
 
-		if ( $var > $max ) {
-			$var = $max;
+		if ( $value > $max ) {
+			return $max;
 		}
 
-		return $var;
+		return $value;
 	}
 
 
