@@ -54,7 +54,7 @@ class ThumbnailHelper extends AppHelper {
 			'Vendor',
 			'Sprinkles.PHPThumb',
 			array(
-				'file' => 'PHPThumb' . DS . 'ThumbLib.inc.php'
+				'file' => 'PHPThumb' . DS . 'src' . DS . 'ThumbLib.inc.php'
 			)
 		);
 
