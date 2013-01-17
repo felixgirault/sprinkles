@@ -41,21 +41,32 @@ class IndexableBehavior extends ModelBehavior {
 			$this->settings[ $alias ],
 			( array )$settings
 		);
+	}
 
-		$Model->bindModel(
-			array(
-				'hasMany' => array(
-					'Index' => array(
-						'className' => 'Sprinkles.Index',
-						'foreignKey' => 'model_id',
-						'conditions' => array(
-							'model_name' => $alias
-						),
+
+
+	/**
+	 *
+	 */
+
+	protected function _bindIndexModel( ) {
+
+		if ( !isset( $this->Index )) {
+			$Model->bindModel(
+				array(
+					'hasMany' => array(
+						'Index' => array(
+							'className' => 'Sprinkles.Index',
+							'foreignKey' => 'model_id',
+							'conditions' => array(
+								'model_name' => $alias
+							),
+						)
 					)
-				)
-			),
-			false
-		);
+				),
+				false
+			);
+		}
 	}
 
 
@@ -68,6 +79,8 @@ class IndexableBehavior extends ModelBehavior {
 	 */
 
 	public function afterSave( Model $Model, $created ) {
+
+		$this->_bindIndexModel( );
 
 		$id = $Model->id;
 		$alias = $Model->alias;
@@ -123,7 +136,7 @@ class IndexableBehavior extends ModelBehavior {
 		$data = array( );
 
 		foreach ( $tokens as $token ) {
-			$data[ ] = array( 'name' => $token );
+			$data[ ] = array( 'name' => $token );
 		}
 
 		$Model->Index->Token->saveMany( $data );
@@ -152,6 +165,8 @@ class IndexableBehavior extends ModelBehavior {
 
 	public function optionsFromQuery( Model $Model, $query ) {
 
+		$this->_bindIndexModel( );
+
 		$tokens = array_map(
 			$this->settings[ $Model->alias ]['tokenFilter'],
 			$this->tokenize( $query )
@@ -171,6 +186,8 @@ class IndexableBehavior extends ModelBehavior {
 	 */
 
 	public function optionsFromRecord( Model $Model, array $data ) {
+
+		$this->_bindIndexModel( );
 
 		$alias = $Model->alias;
 		$tokens = array( );

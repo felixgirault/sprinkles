@@ -35,7 +35,7 @@ class ExtendedTextHelper extends TextHelper {
 		'flags' => null,	// use default flags for htmlspecialchars( )
 		'escape' => true,
 		'typography' => true,
-		'carriage' => true,
+		'carriage' => false,
 		'whitespace' => false,
 		'simpleReplacements' => array(
 			'...' => '…',	// ellipsis
@@ -52,11 +52,11 @@ class ExtendedTextHelper extends TextHelper {
 	/**
 	 *
 	 */
-	
+
 	public function __construct( View $View, array $settings = array( )) {
 
 		parent::__construct( $View, $settings );
-		
+
 		if ( isset( $settings['prepare']) && is_array( $settings['prepare'] )) {
 			$this->_prepare = array_merge( $this->_prepare, $settings['prepare']);
 		}
