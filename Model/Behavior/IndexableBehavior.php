@@ -49,9 +49,9 @@ class IndexableBehavior extends ModelBehavior {
 	 *
 	 */
 
-	protected function _bindIndexModel( ) {
+	protected function _bindIndexModel( Model $Model ) {
 
-		if ( !isset( $this->Index )) {
+		if ( !isset( $Model->Index )) {
 			$Model->bindModel(
 				array(
 					'hasMany' => array(
@@ -59,7 +59,7 @@ class IndexableBehavior extends ModelBehavior {
 							'className' => 'Sprinkles.Index',
 							'foreignKey' => 'model_id',
 							'conditions' => array(
-								'model_name' => $alias
+								'model_name' => $Model->alias
 							),
 						)
 					)
@@ -80,7 +80,7 @@ class IndexableBehavior extends ModelBehavior {
 
 	public function afterSave( Model $Model, $created ) {
 
-		$this->_bindIndexModel( );
+		$this->_bindIndexModel( $Model );
 
 		$id = $Model->id;
 		$alias = $Model->alias;
@@ -165,7 +165,7 @@ class IndexableBehavior extends ModelBehavior {
 
 	public function optionsFromQuery( Model $Model, $query ) {
 
-		$this->_bindIndexModel( );
+		$this->_bindIndexModel( $Model );
 
 		$tokens = array_map(
 			$this->settings[ $Model->alias ]['tokenFilter'],
@@ -187,7 +187,7 @@ class IndexableBehavior extends ModelBehavior {
 
 	public function optionsFromRecord( Model $Model, array $data ) {
 
-		$this->_bindIndexModel( );
+		$this->_bindIndexModel( $Model );
 
 		$alias = $Model->alias;
 		$tokens = array( );
