@@ -81,7 +81,7 @@ class ThumbnailHelper extends AppHelper {
 
 	public function path( $key ) {
 
-		return $this->url( '/img/thumbs/' . rand( 1, 14 ) . '.jpg' );
+		return $this->url( '/img/thumbs/' . rand( 1, 20 ) . '.jpg' );
 
 		$hash = md5( $key );
 		$level = Sprinkles::bound( 2, $this->_level, strlen( $hash ) - 1 );

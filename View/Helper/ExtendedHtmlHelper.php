@@ -1,6 +1,7 @@
 <?php
 
 App::uses( 'HtmlHelper', 'View/Helper' );
+App::uses('CakeTime', 'Utility');
 
 
 
@@ -22,6 +23,29 @@ App::uses( 'HtmlHelper', 'View/Helper' );
  */
 
 class ExtendedHtmlHelper extends HtmlHelper {
+
+	/**
+	 *	Example for OpenGraph metas:
+	 *
+	 *	array( 'property', 'content' ),
+	 *	array(
+	 *		array( 'og:title', 'Title' ),
+	 *		array( 'og:image', 'http://...' ),
+	 *	)
+	 */
+
+	public function metas( array $structure, array $data ) {
+
+		$html = '';
+
+		foreach ( $data as $values ) {
+			$html .= $this->tag( 'meta', '', array_combine( $structure, $values ));
+		}
+
+		return $html;
+	}
+
+
 
 	/**
 	 *
@@ -84,14 +108,18 @@ class ExtendedHtmlHelper extends HtmlHelper {
 		$options = array_merge(
 			array(
 				'datetime' => CakeTime::format( DATE_W3C, $date ),
-				'format' => ''
+				'format' => 'Y-m-d',
+				'escape' => false
 			),
 			$options
 		);
 
+		$format = $options['format'];
+		unset( $options['format']);
+
 		return $this->tag(
 			'time',
-			CakeTime::format( $options['format'], $date ),
+			CakeTime::format( $format, $date ),
 			$options
 		);
 	}
@@ -107,19 +135,25 @@ class ExtendedHtmlHelper extends HtmlHelper {
 		$options = array_merge(
 			array(
 				'datetime' => CakeTime::format( DATE_W3C, $date ),
-				'format' => '',
+				'format' => 'Y-m-d',
 				'end' => '+1 week'
 			),
 			$options
 		);
+
+		$format = $options['format'];
+		unset( $options['format']);
+
+		$end = $options['end'];
+		unset( $options['end']);
 
 		return $this->tag(
 			'time',
 			CakeTime::timeAgoInWords(
 				$date,
 				array(
-					'format' => $options['format'],
-					'end' => $options['format']
+					'format' => $format,
+					'end' => $end
 				)
 			),
 			$options
