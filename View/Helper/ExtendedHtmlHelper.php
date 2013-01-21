@@ -1,7 +1,7 @@
 <?php
 
 App::uses( 'HtmlHelper', 'View/Helper' );
-App::uses('CakeTime', 'Utility');
+App::uses( 'CakeTime', 'Utility' );
 
 
 
@@ -108,8 +108,7 @@ class ExtendedHtmlHelper extends HtmlHelper {
 		$options = array_merge(
 			array(
 				'datetime' => CakeTime::format( DATE_W3C, $date ),
-				'format' => 'Y-m-d',
-				'escape' => false
+				'format' => 'm.d.Y'
 			),
 			$options
 		);
@@ -135,7 +134,7 @@ class ExtendedHtmlHelper extends HtmlHelper {
 		$options = array_merge(
 			array(
 				'datetime' => CakeTime::format( DATE_W3C, $date ),
-				'format' => 'Y-m-d',
+				'format' => 'm.d.Y',
 				'end' => '+1 week'
 			),
 			$options
