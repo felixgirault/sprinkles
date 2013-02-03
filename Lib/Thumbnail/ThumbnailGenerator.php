@@ -8,12 +8,12 @@
  *	@license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-abstract class ThumbnailGenerator {
+interface ThumbnailGenerator {
 
 	/**
 	 *
 	 */
 
-	public abstract function generate( array $options, $source, $destination );
+	public function generate( array $options, $source, $destination );
 
 }
