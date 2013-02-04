@@ -26,8 +26,25 @@ class ThumbnailHelper extends AppHelper {
 	 *
 	 */
 
+	public function imageUrl( $format, $key ) {
+
+		return $this->Html->url(
+			Thumbnail::path( $format, $key ),
+			true
+		);
+	}
+
+
+
+	/**
+	 *
+	 */
+
 	public function image( $format, $key, $options ) {
 
-		return $this->Html->image( Thumbnail::path( $format, $key ), $options );
+		return $this->Html->image(
+			Thumbnail::path( $format, $key ),
+			$options
+		);
 	}
 }
