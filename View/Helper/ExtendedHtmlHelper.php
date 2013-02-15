@@ -39,7 +39,7 @@ class ExtendedHtmlHelper extends HtmlHelper {
 		$html = '';
 
 		foreach ( $data as $values ) {
-			$html .= $this->tag( 'meta', '', array_combine( $structure, $values ));
+			$html .= $this->useTag( 'meta', array_combine( $structure, $values ));
 		}
 
 		return $html;
@@ -162,60 +162,16 @@ class ExtendedHtmlHelper extends HtmlHelper {
 
 
 	/**
-	 *	Embeds elements markup into javascript variables.
-	 *
-	 *	@param string|array A single element name, or an array of element names.
-	 *	@return string A script tag containing the markup variables.
-	 */
-
-	public function markup( $markups, array $options = array( )) {
-
-		if ( !is_array( $markups )) {
-			$markups = array( $this->_markupName( $markups ) => $markups );
-		}
-
-		$this->scriptStart( $options );
-
-		foreach ( $markups as $var => $element ) {
-			printf(
-				"var %s = '%s';\n",
-				is_string( $var )
-					? $var
-					: $this->_markupName( $element ),
-				$this->_prepareMarkup( $this->_View->element( $element ))
-			);
-		}
-
-		return $this->scriptEnd( );
-	}
-
-
-
-	/**
 	 *
 	 */
 
-	protected function _markupName( $element ) {
+	public function conditionalScript( $condition, $url, array $options = array( )) {
 
-		$path = explode( '/', $element );
-		$name = array_pop( $path );
-		$name = strtoupper( $name ) . '_MARKUP';
-
-		return $name;
-	}
-
-
-
-	/**
-	 *
-	 */
-
-	protected function _prepareMarkup( $markup ) {
-
-		$markup = preg_replace( '/[\s\h\v]+/', ' ', $markup );
-		$markup = str_replace( '\'', '\\\'', $markup );
-
-		return $markup;
+		return sprintf(
+			'<!--[if %s]>%s<![endif]-->',
+			$condition,
+			$this->script( $url, $options )
+		);
 	}
 
 
