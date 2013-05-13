@@ -12,19 +12,34 @@ class IndexShell extends AppShell {
 
 	public function getOptionParser( ) {
 
-		return ConsoleOptionParser::buildFromArray(
+		$parser = parent::getOptionParser( );
+
+		$parser->addOption(
+			'model',
 			array(
-				'description' => array(
-					__( 'Use this command to index model data.' )
-				),
-				'arguments' => array(
-					'model' => array(
-						'help' => __( 'Model to index.' ),
-						'required' => true
-					)
-				)
+				'help' => __( 'Model to index.' ),
+				'short' => 'm',
+				'required' => true
 			)
 		);
+
+		$parser->addOption(
+			'start',
+			array(
+				'short' => 's',
+				'default' => 1
+			)
+		);
+
+		$parser->addOption(
+			'block',
+			array(
+				'short' => 'b',
+				'default' => 1000
+			)
+		);
+
+		return $parser;
 	}
 
 
@@ -35,6 +50,32 @@ class IndexShell extends AppShell {
 
 	public function main( ) {
 
+		$modelName = $this->params['model'];
 
+		$this->uses = array( $modelName );
+		$this->_loadModels( );
+
+		if ( !isset( $this->{$modelName})) {
+			$this->out( '<error>' . __( 'Unable to load model' ) . '</error>' );
+			return;
+		}
+
+		$records = $this->{$modelName}->find(
+			'all',
+			array(
+				'offset' => $this->params['start'],
+				'limit' => $this->params['block'],
+				'order' => "$modelName.id"
+			)
+		);
+
+		if ( empty( $records )) {
+			$this->out( '<error>' . __( 'No records found' ) . '</error>' );
+			return;
+		}
+
+		foreach ( $records as $record ) {
+			$this->{$modelName}->index( $record );
+		}
 	}
 }

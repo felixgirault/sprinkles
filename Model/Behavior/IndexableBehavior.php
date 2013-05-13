@@ -80,18 +80,37 @@ class IndexableBehavior extends ModelBehavior {
 
 	public function afterSave( Model $Model, $created ) {
 
+		$this->index( $Model, $Model->data );
+	}
+
+
+
+	/**
+	 *	Indexes data from the model.
+	 *
+	 *	@param Model $Model Model using this behavior.
+	 */
+
+	public function index( Model $Model, array $data ) {
+
 		$this->_bindIndexModel( $Model );
 
-		$id = $Model->id;
 		$alias = $Model->alias;
+		$id = $data[ $alias ]['id'];
 		$weightedTokens = array( );
 
 		extract( $this->settings[ $alias ]);
 
 		foreach ( $fields as $field => $weight ) {
-			$tokens = array_map(
-				$tokenFilter,
-				$this->tokenize( $data[ $alias ][ $field ])
+			if ( empty( $data[ $alias ][ $field ])) {
+				continue;
+			}
+
+			$tokens = array_filter(
+				array_map(
+					$tokenFilter,
+					$this->tokenize( $data[ $alias ][ $field ])
+				)
 			);
 
 			foreach ( $tokens as $token ) {
@@ -223,6 +242,11 @@ class IndexableBehavior extends ModelBehavior {
 		$indexAlias = $Model->Index->alias;
 		$tokenAlias = $Model->Index->Token->alias;
 		$db = $Model->getDataSource( );
+		$conditions = array( );
+
+		foreach ( $tokens as $token ) {
+			$conditions[ ] = "`$tokenAlias`.`name` LIKE '%$token%'";
+		}
 
 		$tokensQuery = $db->buildStatement(
 			array(
@@ -232,9 +256,7 @@ class IndexableBehavior extends ModelBehavior {
 				'limit' => null,
 				'offset' => null,
 				'joins' => array( ),
-				'conditions' => array(
-					"`$tokenAlias`.`name` IN ( '" . implode( "', '", $tokens ) . "' )"
-				),
+				'conditions' => array( 'OR' => $conditions ),
 				'group' => null,
 				'order' => null
 			),
@@ -257,7 +279,7 @@ class IndexableBehavior extends ModelBehavior {
 				)
 			),
 			'group' => "`$alias`.`id`",
-			'order' => "`$indexAlias`.`weight` DESC"
+			'order' => "SUM(`$indexAlias`.`weight`) DESC"
 		);
 	}
 
