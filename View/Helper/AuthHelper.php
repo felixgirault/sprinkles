@@ -10,7 +10,29 @@ class AuthHelper extends AppHelper {
 	 *
 	 */
 
-	public $helpers = array( 'Session' );
+	public $roleField = 'role';
+
+
+
+	/**
+	 *
+	 */
+
+	public function loggedIn( ) {
+
+		return ( boolean ) $this->user( 'id' );
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function user( $property ) {
+
+		return CakeSession::read( "Auth.User.$property" );
+	}
 
 
 
@@ -32,16 +54,5 @@ class AuthHelper extends AppHelper {
 		}
 
 		return in_array( $this->user( $this->roleField ), $role );
-	}
-
-
-
-	/**
-	 *
-	 */
-
-	public function meta( $one, $two = null ) {
-
-
 	}
 }
