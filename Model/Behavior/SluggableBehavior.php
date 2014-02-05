@@ -59,7 +59,7 @@ class SluggableBehavior extends ModelBehavior {
 	 *	@return mixed False if the operation should abort.
 	 */
 
-	public function beforeSave( Model $Model ) {
+	public function beforeSave( Model $Model, $options = array( )) {
 
 		$alias = $Model->alias;
 
@@ -90,7 +90,7 @@ class SluggableBehavior extends ModelBehavior {
 	 *		any other value will be ignored.
 	 */
 
-	public function afterFind( Model $Model, $results, $primary ) {
+	public function afterFind( Model $Model, $results, $primary = false ) {
 
 		$alias = $Model->alias;
 
