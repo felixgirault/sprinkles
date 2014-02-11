@@ -180,6 +180,17 @@ class ExtendedHtmlHelper extends HtmlHelper {
 	 *
 	 */
 
+	public function scriptBlock( $code, $options = array( )) {
+
+		return parent::scriptBlock( $code, $options + array( 'safe' => false ));
+	}
+
+
+
+	/**
+	 *
+	 */
+
 	public function scripts( array $urls, $root = '' ) {
 
 		if ( !empty( $root )) {
