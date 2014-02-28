@@ -21,7 +21,7 @@ class ExtendedBehavior extends ModelBehavior {
 	public function defaults( Model $Model ) {
 
 		$schema = $Model->schema( );
-		$defaults = array( );
+		$defaults = [ ];
 
 		if ( is_array( $schema )) {
 			foreach ( $schema as $field => $meta ) {

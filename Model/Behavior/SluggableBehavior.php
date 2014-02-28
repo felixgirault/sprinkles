@@ -31,17 +31,17 @@ class SluggableBehavior extends ModelBehavior {
 	 *	@param array $config Configuration settings.
 	 */
 
-	public function setup( Model $Model, $settings = array( )) {
+	public function setup( Model $Model, $settings = [ ]) {
 
 		$alias = $Model->alias;
 
 		if ( !isset( $this->settings[ $alias ])) {
-			$this->settings[ $alias ] = array(
+			$this->settings[ $alias ] = [
 				'field' => $Model->displayField,
 				'slug' => 'slug',
 				'slugCallback' => 'SluggableBehavior::slug',
 				'persistent' => true
-			);
+			];
 		}
 
 		$this->settings[ $alias ] = array_merge(
@@ -59,7 +59,7 @@ class SluggableBehavior extends ModelBehavior {
 	 *	@return mixed False if the operation should abort.
 	 */
 
-	public function beforeSave( Model $Model, $options = array( )) {
+	public function beforeSave( Model $Model, $options = [ ]) {
 
 		$alias = $Model->alias;
 

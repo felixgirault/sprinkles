@@ -67,7 +67,7 @@ class Sprinkles {
 
 		// removes useless passed args
 
-		$reserved = array( 'plugin', 'controller', 'action', 'named', 'pass' );
+		$reserved = [ 'plugin', 'controller', 'action', 'named', 'pass' ];
 		$params = $url;
 
 		foreach ( $reserved as $key ) {

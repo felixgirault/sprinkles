@@ -22,9 +22,9 @@ class Token extends AppModel {
 	 *
 	 */
 
-	public $validate = array(
+	public $validate = [
 		'name' => 'isUnique'
-	);
+	];
 
 
 
@@ -34,23 +34,18 @@ class Token extends AppModel {
 
 	public function buildList( array $tokens ) {
 
-		$data = array( );
+		$data = [ ];
 
 		foreach ( $tokens as $token ) {
-			$data[ ] = array( 'name' => $token );
+			$data[ ] = [ 'name' => $token ];
 		}
 
 		$this->saveMany( $data );
 
-		return $this->find(
-			'list',
-			array(
-				'conditions' => array(
-					array(
-						$this->alias . '.name' => $tokens
-					)
-				)
-			)
-		);
+		return $this->find( 'list', [
+			'conditions' => [
+				$this->alias . '.name' => $tokens
+			]
+		]);
 	}
 }

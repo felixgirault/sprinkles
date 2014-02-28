@@ -22,10 +22,10 @@ class Index extends AppModel {
 	 *
 	 */
 
-	public $belongsTo = array(
-		'Token' => array(
+	public $belongsTo = [
+		'Token' => [
 			'className' => 'Sprinkles.Token'
-		)
-	);
+		]
+	];
 
 }

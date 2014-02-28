@@ -14,30 +14,21 @@ class IndexShell extends AppShell {
 
 		$parser = parent::getOptionParser( );
 
-		$parser->addOption(
-			'model',
-			array(
-				'help' => __( 'Model to index.' ),
-				'short' => 'm',
-				'required' => true
-			)
-		);
+		$parser->addOption( 'model', [
+			'help' => __( 'Model to index.' ),
+			'short' => 'm',
+			'required' => true
+		]);
 
-		$parser->addOption(
-			'start',
-			array(
-				'short' => 's',
-				'default' => 1
-			)
-		);
+		$parser->addOption( 'start', [
+			'short' => 's',
+			'default' => 1
+		]);
 
-		$parser->addOption(
-			'block',
-			array(
-				'short' => 'b',
-				'default' => 1000
-			)
-		);
+		$parser->addOption( 'block', [
+			'short' => 'b',
+			'default' => 1000
+		]);
 
 		return $parser;
 	}
@@ -52,7 +43,7 @@ class IndexShell extends AppShell {
 
 		$modelName = $this->params['model'];
 
-		$this->uses = array( $modelName );
+		$this->uses = [ $modelName ];
 		$this->_loadModels( );
 
 		if ( !isset( $this->{$modelName})) {
@@ -60,14 +51,11 @@ class IndexShell extends AppShell {
 			return;
 		}
 
-		$records = $this->{$modelName}->find(
-			'all',
-			array(
-				'offset' => $this->params['start'],
-				'limit' => $this->params['block'],
-				'order' => "$modelName.id"
-			)
-		);
+		$records = $this->{$modelName}->find( 'all', [
+			'offset' => $this->params['start'],
+			'limit' => $this->params['block'],
+			'order' => "$modelName.id"
+		]);
 
 		if ( empty( $records )) {
 			$this->out( '<error>' . __( 'No records found' ) . '</error>' );

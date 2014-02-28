@@ -45,14 +45,8 @@ class AuthHelper extends AppHelper {
 
 	public function userIs( $role ) {
 
-		if ( !$this->loggedIn( )) {
-			return false;
-		}
-
-		if ( !is_array( $role )) {
-			$role = array( $role );
-		}
-
-		return in_array( $this->user( $this->roleField ), $role );
+		return $this->loggedIn( )
+			? in_array( $this->user( $this->roleField ), ( array )$role )
+			: false;
 	}
 }

@@ -24,17 +24,17 @@ class IndexableBehavior extends ModelBehavior {
 	 *	@param array $config Configuration settings.
 	 */
 
-	public function setup( Model $Model, $settings = array( )) {
+	public function setup( Model $Model, $settings = [ ]) {
 
 		$alias = $Model->alias;
 
 		if ( !isset( $this->settings[ $alias ])) {
-			$this->settings[ $alias ] = array(
-				'fields' => array(
+			$this->settings[ $alias ] = [
+				'fields' => [
 					$Model->displayField => 1
-				),
+				],
 				'tokenFilter' => 'IndexableBehavior::filterToken'
-			);
+			];
 		}
 
 		$this->settings[ $alias ] = array_merge(
@@ -52,20 +52,17 @@ class IndexableBehavior extends ModelBehavior {
 	protected function _bindIndexModel( Model $Model ) {
 
 		if ( !isset( $Model->Index )) {
-			$Model->bindModel(
-				array(
-					'hasMany' => array(
-						'Index' => array(
-							'className' => 'Sprinkles.Index',
-							'foreignKey' => 'model_id',
-							'conditions' => array(
-								'model_name' => $Model->alias
-							),
-						)
-					)
-				),
-				false
-			);
+			$Model->bindModel([
+				'hasMany' => [
+					'Index' => [
+						'className' => 'Sprinkles.Index',
+						'foreignKey' => 'model_id',
+						'conditions' => [
+							'model_name' => $Model->alias
+						],
+					]
+				]
+			], false );
 		}
 	}
 
@@ -97,7 +94,7 @@ class IndexableBehavior extends ModelBehavior {
 
 		$alias = $Model->alias;
 		$id = $data[ $alias ]['id'];
-		$weightedTokens = array( );
+		$weightedTokens = [ ];
 
 		extract( $this->settings[ $alias ]);
 
@@ -123,23 +120,21 @@ class IndexableBehavior extends ModelBehavior {
 		}
 
 		$list = $this->_tokenList( $Model, array_keys( $weightedTokens ));
-		$data = array( );
+		$data = [ ];
 
 		foreach ( $list as $tokenId => $token ) {
-			$data[] = array(
+			$data[ ] = [
 				'token_id' => $tokenId,
 				'model_id' => $id,
 				'model_name' => $alias,
 				'weight' => $weightedTokens[ $token ]
-			);
+			];
 		}
 
-		$Model->Index->deleteAll(
-			array(
-				'model_id' => $id,
-				'model_name' => $alias
-			)
-		);
+		$Model->Index->deleteAll([
+			'model_id' => $id,
+			'model_name' => $alias
+		]);
 
 		$Model->Index->saveMany( $data );
 	}
@@ -152,24 +147,19 @@ class IndexableBehavior extends ModelBehavior {
 
 	protected function _tokenList( Model $Model, array $tokens ) {
 
-		$data = array( );
+		$data = [ ];
 
 		foreach ( $tokens as $token ) {
-			$data[ ] = array( 'name' => $token );
+			$data[ ] = [ 'name' => $token ];
 		}
 
 		$Model->Index->Token->saveMany( $data );
 
-		return $Model->Index->Token->find(
-			'list',
-			array(
-				'conditions' => array(
-					array(
-						$Model->Index->Token->alias . '.name' => $tokens
-					)
-				)
-			)
-		);
+		return $Model->Index->Token->find( 'list', [
+			'conditions' => [
+				$Model->Index->Token->alias . '.name' => $tokens
+			]
+		];
 	}
 
 
@@ -209,7 +199,7 @@ class IndexableBehavior extends ModelBehavior {
 		$this->_bindIndexModel( $Model );
 
 		$alias = $Model->alias;
-		$tokens = array( );
+		$tokens = [ ];
 
 		extract( $this->settings[ $alias ]);
 
@@ -242,45 +232,40 @@ class IndexableBehavior extends ModelBehavior {
 		$indexAlias = $Model->Index->alias;
 		$tokenAlias = $Model->Index->Token->alias;
 		$db = $Model->getDataSource( );
-		$conditions = array( );
+		$conditions = [ ];
 
 		foreach ( $tokens as $token ) {
 			$conditions[ ] = "`$tokenAlias`.`name` LIKE '%$token%'";
 		}
 
-		$tokensQuery = $db->buildStatement(
-			array(
-				'fields' => array( "`$tokenAlias`.`id`" ),
-				'table' => $db->fullTableName( $Model->Index->Token ),
-				'alias' => $tokenAlias,
-				'limit' => null,
-				'offset' => null,
-				'joins' => array( ),
-				'conditions' => array( 'OR' => $conditions ),
-				'group' => null,
-				'order' => null
-			),
-			$Model->Index->Token
-		);
+		$tokensQuery = $db->buildStatement([
+			'fields' => [ "`$tokenAlias`.`id`" ],
+			'table' => $db->fullTableName( $Model->Index->Token ),
+			'alias' => $tokenAlias,
+			'limit' => null,
+			'offset' => null,
+			'joins' => [ ],
+			'conditions' => [ 'OR' => $conditions ],
+			'group' => null,
+			'order' => null
+		], $Model->Index->Token );
 
-		$Model->unbindModel( array( 'hasMany' => array( 'Index' )));
+		$Model->unbindModel([ 'hasMany' => [ 'Index' ]]);
 
-		return array(
-			'joins' => array(
-				array(
-					'table' => $Model->Index->table,
-					'alias' => $indexAlias,
-					'type' => 'INNER',
-					'conditions' => array(
-						"`$indexAlias`.`model_id` = `$alias`.`id`",
-						"`$indexAlias`.`model_name`" => $alias,
-						"`$indexAlias`.`token_id` IN ( $tokensQuery )"
-					)
-				)
-			),
+		return [
+			'joins' => [[
+				'table' => $Model->Index->table,
+				'alias' => $indexAlias,
+				'type' => 'INNER',
+				'conditions' => [
+					"`$indexAlias`.`model_id` = `$alias`.`id`",
+					"`$indexAlias`.`model_name`" => $alias,
+					"`$indexAlias`.`token_id` IN ( $tokensQuery )"
+				]
+			]],
 			'group' => "`$alias`.`id`",
 			'order' => "SUM(`$indexAlias`.`weight`) DESC"
-		);
+		];
 	}
 
 

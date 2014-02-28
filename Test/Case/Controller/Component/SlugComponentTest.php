@@ -13,7 +13,7 @@ App::uses( 'SlugComponent', 'Sprinkles.Controller/Component' );
  */
 
 class TestSlugController extends Controller {
-	
+
 	/**
 	 *
 	 */
@@ -34,7 +34,7 @@ class SlugComponentTest extends CakeTestCase {
 	 */
 
 	public $Slug = null;
-	
+
 
 
 	/**
@@ -73,7 +73,7 @@ class SlugComponentTest extends CakeTestCase {
 
 		$article = $this->Controller->Article->findById( 1 );
 
-		$this->Slug->ensureIntegrity( array( 'slug' => $article['Article']['slug']), $article );
+		$this->Slug->ensureIntegrity([ 'slug' => $article['Article']['slug']], $article );
 	}
 
 

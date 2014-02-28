@@ -31,21 +31,21 @@ class ExtendedTextHelper extends TextHelper {
 	 *	@see ExtendedTextHelper::prepare( )
 	 */
 
-	protected $_prepare = array(
+	protected $_prepare = [
 		'flags' => null,	// use default flags for htmlspecialchars( )
 		'escape' => true,
 		'typography' => true,
 		'carriage' => false,
 		'whitespace' => false,
-		'simpleReplacements' => array(
+		'simpleReplacements' => [
 			'...' => '…',	// ellipsis
 			'\'' => '’',	// apostrophe
 			'--' => '—'	// em-dash
-		),
-		'advancedReplacements' => array(
+		],
+		'advancedReplacements' => [
 			'/"([^"]*)"/U' => '«&thinsp;$1&thinsp;»'	// quotation marks
-		)
-	);
+		]
+	];
 
 
 
@@ -53,7 +53,7 @@ class ExtendedTextHelper extends TextHelper {
 	 *
 	 */
 
-	public function __construct( View $View, array $settings = array( )) {
+	public function __construct( View $View, array $settings = [ ]) {
 
 		parent::__construct( $View, $settings );
 
@@ -92,7 +92,7 @@ class ExtendedTextHelper extends TextHelper {
 	 *	@return string The escaped string.
 	 */
 
-	public function prepare( $string, array $options = array( )) {
+	public function prepare( $string, array $options = [ ]) {
 
 		extract( array_merge( $this->_prepare, $options ));
 

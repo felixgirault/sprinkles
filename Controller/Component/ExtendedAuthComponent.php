@@ -39,7 +39,7 @@ class ExtendedAuthComponent extends AuthComponent {
 	 *	@var array
 	 */
 
-	protected $_roleBasedAllowedActions = array( );
+	protected $_roleBasedAllowedActions = [ ];
 
 
 
@@ -73,7 +73,7 @@ class ExtendedAuthComponent extends AuthComponent {
 	 *	@return mixed Return of the method if it can be parsed, otherwise null.
 	 */
 
-	public function __call( $method, array $arguments = array( )) {
+	public function __call( $method, array $arguments = [ ]) {
 
 		if ( strpos( $method, 'user' ) === 0 ) {
 			$key = substr( $method, strlen( 'user' ));
@@ -105,7 +105,7 @@ class ExtendedAuthComponent extends AuthComponent {
 		if ( empty( $args ) || $actions === null ) {
 			$this->allowedActions = $this->_methods;
 		} else {
-			$allowed = array( );
+			$allowed = [ ];
 
 			if ( isset( $args[ 0 ]) && is_array( $args[ 0 ])) {
 				foreach ( $args[ 0 ] as $action => $roles ) {
@@ -134,14 +134,8 @@ class ExtendedAuthComponent extends AuthComponent {
 
 	public function userIs( $roles ) {
 
-		if ( !$this->loggedIn( )) {
-			return false;
-		}
-
-		if ( !is_array( $roles )) {
-			$roles = array( $roles );
-		}
-
-		return in_array( $this->user( $this->roleField ), $roles );
+		return $this->loggedIn( )
+			? in_array( $this->user( $this->roleField ), ( array )$roles )
+			: false;
 	}
 }

@@ -27,7 +27,7 @@
  *	In this case, if you are dealing with the id '123456789', it will be
  *	converted to '21i3v9' in the urls, without changing anything in the models,
  *	views or controllers code.
- *	
+ *
  *	@author Félix Girault <felix.girault@gmail.com>
  *	@package Sprinkles.Lib.Routing.Route
  *	@license MIT License (http://www.opensource.org/licenses/mit-license.php)
@@ -49,16 +49,13 @@ class EncodedRoute extends CakeRoute {
 	 *	@see CakeRoute::__construct( )
 	 */
 
-	public function __construct( $template, $defaults = array( ), $options = array( )) {
+	public function __construct( $template, $defaults = [ ], $options = [ ]) {
 
-		$options = array_merge(
-			array(
-				'encode' => array( ),
-				'encodeCallback' => 'EncodedRoute::encodeString',
-				'decodeCallback' => 'EncodedRoute::decodeString'
-			),
-			$options
-		);
+		$options += [
+			'encode' => [ ],
+			'encodeCallback' => 'EncodedRoute::encodeString',
+			'decodeCallback' => 'EncodedRoute::decodeString'
+		];
 
 		parent::__construct( $template, $defaults, $options );
 	}
@@ -102,7 +99,7 @@ class EncodedRoute extends CakeRoute {
 	 *	@param array $url An array of parameters to check matching with.
 	 *	@return mixed Either a string url for the parameters if they match or false.
 	 */
-	
+
 	public function match( $url ) {
 
 		$this->_checkCallback( $this->options['encodeCallback']);

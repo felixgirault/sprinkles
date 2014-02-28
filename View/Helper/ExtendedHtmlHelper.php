@@ -51,7 +51,7 @@ class ExtendedHtmlHelper extends HtmlHelper {
 	 *
 	 */
 
-	public function link( $text, $url = null, $options = array( ), $confirmMessage = false ) {
+	public function link( $text, $url = null, $options = [ ], $confirmMessage = false ) {
 
 		if ( $url !== null && !isset( $options['title'])) {
 			$options['title'] = $text;
@@ -66,7 +66,7 @@ class ExtendedHtmlHelper extends HtmlHelper {
 	 *
 	 */
 
-	public function accessibleLink( $text, $title, $url = null, array $options = array( ), $confirmMessage = false ) {
+	public function accessibleLink( $text, $title, $url = null, array $options = [ ], $confirmMessage = false ) {
 
 		$options['title'] = $title;
 
@@ -79,7 +79,7 @@ class ExtendedHtmlHelper extends HtmlHelper {
 	 *
 	 */
 
-	public function accessibleImage( $alt, $url, array $options = array( )) {
+	public function accessibleImage( $alt, $url, array $options = [ ]) {
 
 		$options['alt'] = $alt;
 
@@ -92,7 +92,7 @@ class ExtendedHtmlHelper extends HtmlHelper {
 	 *
 	 */
 
-	public function title( $level, $text, array $options = array( )) {
+	public function title( $level, $text, array $options = [ ]) {
 
 		return $this->tag( 'h' . $level, $text, $options );
 	}
@@ -103,15 +103,12 @@ class ExtendedHtmlHelper extends HtmlHelper {
 	 *	Returns an Html5 `<time>` tag
 	 */
 
-	public function time( $date, array $options = array( )) {
+	public function time( $date, array $options = [ ]) {
 
-		$options = array_merge(
-			array(
-				'datetime' => CakeTime::format( DATE_W3C, $date ),
-				'format' => 'm.d.Y'
-			),
-			$options
-		);
+		$options += [
+			'datetime' => CakeTime::format( DATE_W3C, $date ),
+			'format' => 'm.d.Y'
+		];
 
 		$format = $options['format'];
 		unset( $options['format']);
@@ -129,16 +126,13 @@ class ExtendedHtmlHelper extends HtmlHelper {
 	 *
 	 */
 
-	public function timeAgo( $date, array $options = array( )) {
+	public function timeAgo( $date, array $options = [ ]) {
 
-		$options = array_merge(
-			array(
-				'datetime' => CakeTime::format( DATE_W3C, $date ),
-				'format' => 'm.d.Y',
-				'end' => '+1 week'
-			),
-			$options
-		);
+		$options += [
+			'datetime' => CakeTime::format( DATE_W3C, $date ),
+			'format' => 'm.d.Y',
+			'end' => '+1 week'
+		];
 
 		$format = $options['format'];
 		unset( $options['format']);
@@ -148,13 +142,10 @@ class ExtendedHtmlHelper extends HtmlHelper {
 
 		return $this->tag(
 			'time',
-			CakeTime::timeAgoInWords(
-				$date,
-				array(
-					'format' => $format,
-					'end' => $end
-				)
-			),
+			CakeTime::timeAgoInWords( $date, [
+				'format' => $format,
+				'end' => $end
+			]),
 			$options
 		);
 	}
@@ -165,7 +156,7 @@ class ExtendedHtmlHelper extends HtmlHelper {
 	 *
 	 */
 
-	public function conditionalScript( $condition, $url, array $options = array( )) {
+	public function conditionalScript( $condition, $url, array $options = [ ]) {
 
 		return sprintf(
 			'<!--[if %s]>%s<![endif]-->',
@@ -180,9 +171,9 @@ class ExtendedHtmlHelper extends HtmlHelper {
 	 *
 	 */
 
-	public function scriptBlock( $code, $options = array( )) {
+	public function scriptBlock( $code, $options = [ ]) {
 
-		return parent::scriptBlock( $code, $options + array( 'safe' => false ));
+		return parent::scriptBlock( $code, $options + [ 'safe' => false ]);
 	}
 
 

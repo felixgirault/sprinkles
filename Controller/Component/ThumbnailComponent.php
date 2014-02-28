@@ -22,7 +22,7 @@ class ThumbnailComponent extends Component {
 	 *
 	 */
 
-	public $formats = array( );
+	public $formats = [ ];
 
 
 

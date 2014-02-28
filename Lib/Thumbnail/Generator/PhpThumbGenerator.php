@@ -2,13 +2,9 @@
 
 App::uses( 'ThumbnailGenerator', 'Sprinkles.Lib/Thumbnail' );
 
-App::import(
-	'Vendor',
-	'Sprinkles.PHPThumb',
-	array(
-		'file' => 'PHPThumb' . DS . 'src' . DS . 'ThumbLib.inc.php'
-	)
-);
+App::import( 'Vendor', 'Sprinkles.PHPThumb', [
+	'file' => 'PHPThumb' . DS . 'src' . DS . 'ThumbLib.inc.php'
+]);
 
 
 
@@ -28,11 +24,11 @@ class PhpThumbGenerator implements ThumbnailGenerator {
 
 	public function generate( array $options, $source, $destination ) {
 
-		$options += array(
-			'settings' => array( ),
-			'operations' => array( ),
+		$options += [
+			'settings' => [ ],
+			'operations' => [ ],
 			'format' => 'png'
-		);
+		];
 
 		$PhpThumb = PhpThumbFactory::create( $source, $options['settings']);
 

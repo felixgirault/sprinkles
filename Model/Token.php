@@ -22,7 +22,7 @@ class Token extends AppModel {
 	 *
 	 */
 
-	public $validate = array(
+	public $validate = [
 		'name' => 'isUnique'
-	);
+	];
 }

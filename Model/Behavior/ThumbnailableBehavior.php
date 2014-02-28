@@ -32,7 +32,7 @@ class ThumbnailableBehavior extends ModelBehavior {
 		$alias = $Model->alias;
 
 		if ( !isset( $this->settings[ $alias ])) {
-			$this->settings[ $alias ] = array( );
+			$this->settings[ $alias ] = [ ];
 		}
 
 		$this->settings[ $alias ] = array_merge(
@@ -48,7 +48,6 @@ class ThumbnailableBehavior extends ModelBehavior {
 	 */
 
 	public function beforeSave( Model $Model ) {
-
 
 		return true;
 	}

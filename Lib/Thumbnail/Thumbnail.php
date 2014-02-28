@@ -38,12 +38,12 @@ class Thumbnail {
 	 *
 	 */
 
-	protected static $_defaults = array(
-		self::all => array(
+	protected static $_defaults = [
+		self::all => [
 			'levels' => 3,
 			'format' => 'png'
-		)
-	);
+		]
+	];
 
 
 
@@ -53,7 +53,7 @@ class Thumbnail {
 	 *	@var array
 	 */
 
-	protected static $_formats = array( );
+	protected static $_formats = [ ];
 
 
 

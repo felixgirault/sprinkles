@@ -29,10 +29,10 @@ class ExtendedSessionComponent extends SessionComponent {
 	 *	@var array
 	 */
 
-	public $classes = array(
+	public $classes = [
 		'success' => 'success',
 		'error' => 'error'
-	);
+	];
 
 
 
@@ -90,8 +90,8 @@ class ExtendedSessionComponent extends SessionComponent {
 	public function flash( $type, $message, $url = false ) {
 
 		$params = isset( $this->classes[ $type ])
-			? array( 'class' => $this->classes[ $type ])
-			: array( );
+			? [ 'class' => $this->classes[ $type ]]
+			: [ ];
 
 		$this->setFlash( $message, 'flash', $params, $type );
 

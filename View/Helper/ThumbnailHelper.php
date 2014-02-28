@@ -18,7 +18,7 @@ class ThumbnailHelper extends AppHelper {
 	 *
 	 */
 
-	public $helpers = array( 'Html' );
+	public $helpers = [ 'Html' ];
 
 
 

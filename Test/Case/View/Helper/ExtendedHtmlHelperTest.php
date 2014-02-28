@@ -25,7 +25,7 @@ class ExtendedHtmlHelperTest extends CakeTestCase {
 	 */
 
 	public function setUp( ) {
-		
+
 		parent::setUp( );
 
 		$Controller = new Controller( );
@@ -44,7 +44,7 @@ class ExtendedHtmlHelperTest extends CakeTestCase {
 		$this->assertEquals( '<h1>Title</h1>', $this->ExtendedHtml->title( 1, 'Title' ));
 		$this->assertEquals(
 			'<h2 class="title">Title</h2>',
-			$this->ExtendedHtml->title( 2, 'Title', array( 'class' => 'title' ))
+			$this->ExtendedHtml->title( 2, 'Title', [ 'class' => 'title' ])
 		);
 	}
 }
