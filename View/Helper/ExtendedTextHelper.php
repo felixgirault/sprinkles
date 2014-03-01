@@ -40,7 +40,7 @@ class ExtendedTextHelper extends TextHelper {
 		'simpleReplacements' => [
 			'...' => '…',	// ellipsis
 			'\'' => '’',	// apostrophe
-			'--' => '—'	// em-dash
+			'-' => '–'	// dash
 		],
 		'advancedReplacements' => [
 			'/"([^"]*)"/U' => '«&thinsp;$1&thinsp;»'	// quotation marks
