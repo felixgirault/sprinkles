@@ -2,6 +2,9 @@
 
 App::uses( 'Sprinkles', 'Sprinkles.Lib' );
 
+defined( 'THUMBNAIL_DEFAULT_PATH' )
+or define( 'THUMBNAIL_DEFAULT_PATH', IMAGES . 'thumbs' );
+
 
 
 /**
@@ -16,6 +19,14 @@ class Thumbnail {
 
 	/**
 	 *
+	 */
+
+	public static $path = THUMBNAIL_DEFAULT_PATH;
+
+
+
+	/**
+	 *
 	 *
 	 *	@param string|array $configuration Config name or config array.
 	 */
@@ -26,7 +37,7 @@ class Thumbnail {
 		$levels = Sprinkles::bound( 2, $levels, strlen( $hash ) - 1 );
 		$start = substr( $hash, 0, $levels );
 
-		return $format
+		return self::$path
 			. DS . implode( DS, str_split( $start ))
 			. DS . substr( $hash, $levels ) . '.' . $extension;
 	}
