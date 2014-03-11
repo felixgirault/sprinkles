@@ -96,16 +96,6 @@ class ExtendedTextHelper extends TextHelper {
 
 		extract( array_merge( $this->_prepare, $options ));
 
-		// escaping
-
-		if ( $escape ) {
-			if ( $flags === null ) {
-				$string = htmlspecialchars( $string );
-			} else {
-				$string = htmlspecialchars( $string, $flags );
-			}
-		}
-
 		// typographic corrections
 
 		if ( $typography ) {
@@ -121,6 +111,16 @@ class ExtendedTextHelper extends TextHelper {
 				foreach ( $advancedReplacements as $pattern => $replacement ) {
 					$string = preg_replace( $pattern, $replacement, $string );
 				}
+			}
+		}
+
+		// escaping
+
+		if ( $escape ) {
+			if ( $flags === null ) {
+				$string = htmlspecialchars( $string );
+			} else {
+				$string = htmlspecialchars( $string, $flags );
 			}
 		}
 
