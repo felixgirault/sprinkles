@@ -43,7 +43,8 @@ class ExtendedTextHelper extends TextHelper {
 			'-' => '–'	// dash
 		],
 		'advancedReplacements' => [
-			'/"([^"]*)"/U' => '«&thinsp;$1&thinsp;»'	// quotation marks
+			'/«\s*([^»]*)\s*»/U' => '« $1 »',	// quotation marks
+			'/"\s*([^"]*)\s*"/U' => '« $1 »'	// quotation marks
 		]
 	];
 
