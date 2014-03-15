@@ -76,7 +76,7 @@ class Thumbnail {
 
 			$this->_components[ $configName ][ $hash ] = [
 				'dir' => IMAGES . $config['path'],
-				'url' => $config['path'],
+				'url' => '/' . Configure::read( 'App.imageBaseUrl' ) . $config['path'],
 				'path' => implode( DS, str_split( $start )),
 				'file' => substr( $hash, $levels ) . '.' . $config['extension']
 			];
@@ -98,7 +98,7 @@ class Thumbnail {
 			'mkdir' => 0755
 		];
 
-		$path = $components['dir'] . $components['path'];
+		$path = $components['dir'] . DS . $components['path'];
 
 		if ( $options['mkdir']) {
 			mkdir( $path, $options['mkdir'], true );
