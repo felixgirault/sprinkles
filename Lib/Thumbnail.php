@@ -2,9 +2,6 @@
 
 App::uses( 'Sprinkles', 'Sprinkles.Lib' );
 
-defined( 'THUMBNAIL_DEFAULT_PATH' )
-or define( 'THUMBNAIL_DEFAULT_PATH', IMAGES . 'thumbs' );
-
 
 
 /**
@@ -21,24 +18,106 @@ class Thumbnail {
 	 *
 	 */
 
-	public static $path = THUMBNAIL_DEFAULT_PATH;
+	protected $_defaults = [
+		'path' => 'thumbs',
+		'levels' => 3,
+		'extension' => 'jpg'
+	];
 
 
 
 	/**
 	 *
-	 *
-	 *	@param string|array $configuration Config name or config array.
 	 */
 
-	public static function path( $key, $levels = 3, $extension = 'jpg' ) {
+	protected $_configs = [ ];
+
+
+
+	/**
+	 *
+	 */
+	protected $_components = [ ];
+
+
+
+	/**
+	 *
+	 */
+
+	public function __construct( array $configs = [ ]) {
+
+		$this->_configs = array_map( function( $config ) {
+			$config += $this->_defaults;
+			$config['path'] = trim( $config['path'], '/' . DS );
+
+			return $config;
+		}, $configs );
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function components( $key, $configName ) {
 
 		$hash = md5( $key );
-		$levels = Sprinkles::bound( 2, $levels, strlen( $hash ) - 1 );
-		$start = substr( $hash, 0, $levels );
 
-		return self::$path
-			. DS . implode( DS, str_split( $start ))
-			. DS . substr( $hash, $levels ) . '.' . $extension;
+		if ( empty( $this->_components[ $configName ][ $hash ])) {
+			if ( empty( $this->_configs[ $configName ])) {
+				throw new Exception( "The `$configName` config is not defined." );
+			}
+
+			$config = $this->_configs[ $configName ];
+			$levels = Sprinkles::bound( 2, $config['levels'], strlen( $hash ) - 1 );
+			$start = substr( $hash, 0, $levels );
+
+			$this->_components[ $configName ][ $hash ] = [
+				'dir' => IMAGES . $config['path'],
+				'url' => $config['path'],
+				'path' => implode( DS, str_split( $start )),
+				'file' => substr( $hash, $levels ) . '.' . $config['extension']
+			];
+		}
+
+		return $this->_components[ $configName ][ $hash ];
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function path( $key, $config, array $options = [ ]) {
+
+		$components = $this->components( $key, $config );
+		$options += [
+			'mkdir' => 0755
+		];
+
+		$path = $components['dir'] . $components['path'];
+
+		if ( $options['mkdir']) {
+			mkdir( $path, $options['mkdir'], true );
+		}
+
+		return $path . DS . $components['file'];
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function url( $key, $config, array $options = [ ]) {
+
+		$components = $this->components( $key, $config );
+		$options += [ ];
+
+		return $components['url'] . '/' . $components['path'] . '/' . $components['file'];
 	}
 }
