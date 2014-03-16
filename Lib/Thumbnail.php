@@ -111,7 +111,7 @@ class Thumbnail {
 
 		$path = $components['dir'] . DS . $components['path'];
 
-		if ( $options['mkdir']) {
+		if ( $options['mkdir'] && !is_dir( $path )) {
 			mkdir( $path, $options['mkdir'], true );
 		}
 
