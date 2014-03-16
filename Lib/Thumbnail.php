@@ -61,6 +61,17 @@ class Thumbnail {
 	 *
 	 */
 
+	public function configs( ) {
+
+		return array_keys( $this->_configs );
+	}
+
+
+
+	/**
+	 *
+	 */
+
 	public function components( $key, $configName ) {
 
 		$hash = md5( $key );
