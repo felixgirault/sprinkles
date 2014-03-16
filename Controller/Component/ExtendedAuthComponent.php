@@ -77,14 +77,14 @@ class ExtendedAuthComponent extends AuthComponent {
 
 		if ( strpos( $method, 'user' ) === 0 ) {
 			$key = substr( $method, strlen( 'user' ));
-			$key = Inflector::tableize( $key );
+			$key = Inflector::underscore( $key );
 
 			return $this->user( $key );
 		}
 
 		if ( strpos( $method, 'userIs' ) === 0 ) {
 			$role = substr( $method, strlen( 'userIs' ));
-			$role = Inflector::tableize( $role );
+			$role = Inflector::underscore( $role );
 
 			return $this->userIs( $role );
 		}
