@@ -2,7 +2,7 @@
 	"name": "fg/sprinkles",
 	"type": "cakephp-plugin",
 	"description": "A lightweight toolbox for CakePHP",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"authors": [{
 		"name": "Félix Girault",
 		"email": "felix.girault@gmail.com",
